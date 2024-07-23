@@ -1,19 +1,11 @@
 import React from 'react';
-import "../styles/Dropdown.css"
-interface DropdownProps {
-  onEdit: () => void;
-  onDelete: () => void;
-  translations: {
-    edit: string;
-    delete: string;
-  };
-}
+import "../styles/Dropdown.css";
 
-const Dropdown: React.FC<DropdownProps> = ({ onEdit, onDelete, translations }) => {
+const Dropdown: React.FC<{ onEdit: () => void; onDelete: () => void }> = ({ onEdit }) => {
   return (
-    <div className="dropdown-menu">
-      <button onClick={onEdit}>{translations.edit}</button>
-      <button onClick={onDelete}>{translations.delete}</button>
+    <div className="buttonDiv">
+      <button onClick={onEdit}>Edit</button>
+      <button>Delete</button>
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getCertificates, deleteCertificate } from '../DB/indexedDB';
 import Button from './Button';
-import GearIcon from '../icons/gear';
 import Table from './Table';
-import '../styles/Table.css';
+import GearIcon from '../icons/gear';
+
+import "../styles/Table.css";
 import { useNavigate } from 'react-router';
 import { useLanguage } from './context/LanguageContext';
 
@@ -11,6 +12,7 @@ const Example1: React.FC = () => {
   const navigate = useNavigate();
   const [certificates, setCertificates] = useState<any[]>([]);
   const { translations } = useLanguage();
+
 
   useEffect(() => {
     async function fetchData() {
