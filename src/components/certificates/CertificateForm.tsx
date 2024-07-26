@@ -80,43 +80,7 @@ filteredCertificate.map((certificate)=> (
       alert('Please upload a valid file.');
     }
   };
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0] || null;
-  //   if (file && file.type === 'application/pdf') {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       if (reader.result) {
-  //         setFormData({
-  //           ...formData,
-  //           pdfFile: file,
-  //           pdfPreview: URL.createObjectURL(file),
-  //         });
-  //       }
-  //     };
-  //     reader.readAsDataURL(file);
-  //   } else {
-  //     alert('Please upload a valid file.');
-  //   }
-  // };
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     const file = e.target.files[0];
-  //     const fileExtension = file.name.split('.').pop()?.toLowerCase();
-      
-  //     if (fileExtension !== 'pdf') {
-  //       setError('Please upload a valid PDF document.');
-  //       return;
-  //     }
-
-  //     setFormData({
-  //       ...formData,
-  //       pdfFile: file,
-  //       pdfPreview: URL.createObjectURL(file),
-  //     });
-  //     setError(null);
-  //   }
-  // };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.pdfPreview) {
