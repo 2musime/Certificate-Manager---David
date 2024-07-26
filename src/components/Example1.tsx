@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getCertificates, deleteCertificate } from '../DB/indexedDB';
+<<<<<<< HEAD
 import Button from './Button';
+=======
+>>>>>>> f67b3b1 (Feature/Task-5-KAN-55 Delete functionality is implemented well)
 import Table from './Table';
 import GearIcon from '../icons/gear';
 import '../styles/Table.css';
@@ -10,7 +13,10 @@ import { useLanguage } from './context/LanguageContext';
 const Example1: React.FC = () => {
   const navigate = useNavigate();
   const [certificates, setCertificates] = useState<any[]>([]);
+<<<<<<< HEAD
   const { translations } = useLanguage();
+=======
+>>>>>>> f67b3b1 (Feature/Task-5-KAN-55 Delete functionality is implemented well)
 
   useEffect(() => {
     async function fetchData() {
@@ -36,6 +42,7 @@ const Example1: React.FC = () => {
         console.error('Failed to delete certificate', error);
       }
     }
+<<<<<<< HEAD
     navigate('/example1');
   };
 
@@ -72,6 +79,40 @@ const Example1: React.FC = () => {
         renderRowActions={renderRowActions}
         selectableRows={false}
       />
+=======
+  };
+
+  return (
+    <div>
+      <Table data={[]} onNewCertificate={() => navigate('/new-certificate')} />
+      <table>
+        <thead>
+          <tr>
+            <td></td>
+            <td>Supplier</td>
+            <td>Certificate Type</td>
+            <td>Valid From</td>
+            <td>Valid To</td>
+          </tr>
+        </thead>
+        <tbody>
+          {certificates.map((certificate) => (
+            <tr key={certificate.id}>
+              <td>
+                <GearIcon
+                  onEdit={() => handleEditNavigate(certificate.id)}
+                  onDelete={() => handleDelete(certificate.id)}
+                />
+              </td>
+              <td>{certificate.supplier}</td>
+              <td>{certificate.certificateType}</td>
+              <td>{certificate.validFrom}</td>
+              <td>{certificate.validTo}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+>>>>>>> f67b3b1 (Feature/Task-5-KAN-55 Delete functionality is implemented well)
     </div>
   );
 };
