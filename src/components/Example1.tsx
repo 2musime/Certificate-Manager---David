@@ -3,8 +3,7 @@ import { getCertificates, deleteCertificate } from '../DB/indexedDB';
 import Button from './Button';
 import Table from './Table';
 import GearIcon from '../icons/gear';
-
-import "../styles/Table.css";
+import '../styles/Table.css';
 import { useNavigate } from 'react-router';
 import { useLanguage } from './context/LanguageContext';
 
@@ -77,3 +76,4 @@ const Example1: React.FC = () => {
 };
 
 export default Example1;
+
