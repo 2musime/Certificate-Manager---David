@@ -61,6 +61,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
       [e.target.name]: e.target.value,
     });
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file && file.type === 'application/pdf') {
@@ -133,7 +134,6 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
     });
     setIsModalOpen(false);
   };
-
   return (
     <>
       <form onSubmit={handleSubmit} className="new-certificate-form">
