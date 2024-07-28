@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {  addCertificate, updateCertificate } from "../../DB/indexedDB";
+import { addCertificate, updateCertificate } from "../../DB/indexedDB";
 import { useNavigate } from 'react-router';
 import "../../styles/NewCertificate.css";
 import Search from '../../icons/search';
@@ -36,26 +36,21 @@ const CertificateForm: React.FC<ICertificateForm> = ({isEdit, certificateId}:ICe
     if(isEdit && certificateId){
       async function fetchData() {
         const certificates = await getCertificates();
-
-const filteredCertificate = certificates.filter((certificate) => certificate.id ===certificateId)
-
-filteredCertificate.map((certificate)=> (
-
-
-  setFormData({
-    validFrom: certificate.validFrom ? certificate.validFrom : null,
-    validTo: certificate.validTo ? certificate.validTo : null,
-    certificateType: certificate.certificateType,
-    supplier: certificate.supplier,
-    pdfFile: certificate.pdfFile || null,
-    pdfPreview: certificate.pdfPreview || null
-  })
-))}
-  
+        const filteredCertificate = certificates.filter((certificate) => certificate.id === certificateId);
+        filteredCertificate.map((certificate) => (
+          setFormData({
+            validFrom: certificate.validFrom ? certificate.validFrom : '',
+            validTo: certificate.validTo ? certificate.validTo : '',
+            certificateType: certificate.certificateType,
+            supplier: certificate.supplier,
+            pdfFile: certificate.pdfFile || null,
+            pdfPreview: certificate.pdfPreview || null
+          })
+        ));
+      }
       fetchData();
     }
-
-  }, [certificateId])
+  }, [certificateId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -70,16 +65,17 @@ filteredCertificate.map((certificate)=> (
       [e.target.name]: e.target.value,
     });
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file && file.type === 'application/pdf') {
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.result) {
-                setFormData({
-        ...formData,
-        pdfPreview: reader.result as string,
-      });
+          setFormData({
+            ...formData,
+            pdfPreview: reader.result as string,
+          });
         }
       };
       reader.readAsDataURL(file);
@@ -87,7 +83,7 @@ filteredCertificate.map((certificate)=> (
       alert('Please upload a valid file.');
     }
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.pdfPreview) {
@@ -116,7 +112,6 @@ filteredCertificate.map((certificate)=> (
           pdfFile: formData.pdfPreview,
         });
       }
-      
       navigate('/example1');
       handleReset();
     } catch (error) {
