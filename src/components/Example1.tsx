@@ -26,7 +26,7 @@ const Example1: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm("Are you sure")) {
+    if (window.confirm('Are you sure you want to delete this certificate?')) {
       try {
         await deleteCertificate(id);
         setCertificates((prevCertificates) =>
