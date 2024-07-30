@@ -78,6 +78,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
       reader.readAsDataURL(file);
     } else {
       alert(translations['invalidFileError']);
+      alert(translations['invalidFileError']);
     }
   };
 

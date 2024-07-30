@@ -12,7 +12,6 @@ const Example1: React.FC = () => {
   const [certificates, setCertificates] = useState<any[]>([]);
   const { translations } = useLanguage();
 
-
   useEffect(() => {
     async function fetchData() {
       const data = await getCertificates();
@@ -45,12 +44,14 @@ const Example1: React.FC = () => {
   };
 
   const renderRowActions = (row: { [key: string]: any }) => {
-    return(
-    <GearIcon
-      onEdit={() => handleEditNavigate(row.id)}
-      onDelete={() => handleDelete(row.id)}
-    />
-  )};
+    return (
+      <GearIcon
+        onEdit={() => handleEditNavigate(row.id)}
+        onDelete={() => handleDelete(row.id)}
+      />
+    );
+  };
+
   const headers = [translations['supplier'], translations['certificateType'], translations['validFrom'], translations['validTo']];
 
   const tableData = certificates.map((certificate) => ({
@@ -63,7 +64,7 @@ const Example1: React.FC = () => {
 
   return (
     <div>
-      <Button data={[]} onNewCertificate={() => navigate('/new-certificate')} />
+      <Button onNewCertificate={() => navigate('/new-certificate')} />
       <Table
         headers={headers}
         data={tableData}
@@ -76,4 +77,3 @@ const Example1: React.FC = () => {
 };
 
 export default Example1;
-
