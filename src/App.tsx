@@ -18,6 +18,8 @@ const Start: FC = () => {
 };
 
 const App: FC = () => {
+  const { translations } = useLanguage();
+
   return (
     <Router>
       <UserProvider>

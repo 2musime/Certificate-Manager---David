@@ -10,11 +10,12 @@ import ParticipantLookupModal from '../ParticipantLookupModal';
 import { useLanguage } from '../context/LanguageContext';
 
 interface ICertificateForm {
-  isEdit?: boolean
-  certificateId?: number
+  isEdit?: boolean;
+  certificateId?: number;
 }
 
-const CertificateForm: React.FC<ICertificateForm> = ({isEdit, certificateId}:ICertificateForm) => {
+const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: ICertificateForm) => {
+  const { translations } = useLanguage();
   const navigate = useNavigate();
   const { translations } = useLanguage();
   const validFromRef = useRef<HTMLInputElement>(null);
@@ -32,8 +33,8 @@ const CertificateForm: React.FC<ICertificateForm> = ({isEdit, certificateId}:ICe
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false);
   const [participants, setParticipants] = useState<{ name: string; department: string; email: string }[]>([]);
 
-  useEffect(()=> {
-    if(isEdit && certificateId){
+  useEffect(() => {
+    if (isEdit && certificateId) {
       async function fetchData() {
         const certificates = await getCertificates();
         const filteredCertificate = certificates.filter((certificate) => certificate.id === certificateId);
@@ -80,14 +81,14 @@ const CertificateForm: React.FC<ICertificateForm> = ({isEdit, certificateId}:ICe
       };
       reader.readAsDataURL(file);
     } else {
-      alert('Please upload a valid file.');
+      alert(translations['invalidFileError']);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.pdfPreview) {
-      setError('Please upload a PDF document before submitting.'); 
+      setError(translations['pdfRequiredError']);
       return;
     }
 

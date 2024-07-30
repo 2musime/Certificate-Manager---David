@@ -32,7 +32,7 @@ const Example1: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm("Are you sure")) {
+    if (window.confirm('Are you sure you want to delete this certificate?')) {
       try {
         await deleteCertificate(id);
         setCertificates((prevCertificates) =>
@@ -89,10 +89,10 @@ const Example1: React.FC = () => {
         <thead>
           <tr>
             <td></td>
-            <td>Supplier </td>
-            <td>Name</td>
-            <td>City</td>
-            <td>Type</td>
+            <td>{translations['supplier']}</td>
+            <td>{translations['certificateType']}</td>
+            <td>{translations['validFrom']}</td>
+            <td>{translations['validTo']}</td>
           </tr>
         </thead>
         <tbody>
