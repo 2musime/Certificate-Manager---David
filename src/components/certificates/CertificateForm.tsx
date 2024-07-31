@@ -194,7 +194,18 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           </div>
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
-        </div>
+      <div className="participant-group">
+      <div className="partipant-container">
+    <label>Assigned users</label>
+    <button
+      type="button"
+      className="input-button">
+      <Search className="icon" />
+      Add participant
+    </button>
+  </div>
+      </div>
+  </div>
 
         <div className="form-right">
           <div className="form-group">
