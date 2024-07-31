@@ -2,12 +2,12 @@ import React, { FC, useState } from 'react';
 import '../styles/SupplierLookupModal.css';
 import useTranslation from './context/useTranslation';
 
-interface Props {
+interface SupplierLookupModalProps {
   onClose: () => void;
-  onSelect: (name: string) => void;
+  onSelectSupplier: (name: string) => void;
 }
 
-const SupplierLookupModal: FC<Props> = ({ onClose, onSelect }) => {
+const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSupplier }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [indexSearchTerm, setIndexSearchTerm] = useState('');
   const [citySearchTerm, setCitySearchTerm] = useState('');
@@ -101,7 +101,7 @@ const SupplierLookupModal: FC<Props> = ({ onClose, onSelect }) => {
             </thead>
             <tbody>
               {filteredSuppliers.map((supplier, index) => (
-                <tr key={index} onClick={() => onSelect(supplier.name)}>
+                <tr key={index} onClick={() => onSelectSupplier(supplier.name)}>
                   <td><input type="radio" name="supplier" /></td>
                   <td>{supplier.name}</td>
                   <td>{supplier.index}</td>
