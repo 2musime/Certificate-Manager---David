@@ -1,0 +1,20 @@
+.user-switcher {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: black;
+  }
+  
+  .user-switcher label {
+    font-size: 1rem;
+    color: #333;
+    margin-right: 10px;
+  }
+  
+  .user-switcher select {
+    padding: 5px;
+    font-size: 1rem;
+    border: 1px solid #1650ff;
+    width: 120px;
+  }
+  
