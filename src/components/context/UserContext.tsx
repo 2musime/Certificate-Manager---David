@@ -13,7 +13,7 @@ interface UserProviderProps {
 }
 
 const UserProvider: FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<string>('user1');
+  const [user, setUser] = useState<string>('David');
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -30,4 +30,4 @@ const useUser = (): UserContextType => {
   return context;
 };
 
-export { UserProvider, useUser };
+export { UserProvider, useUser, UserContext };

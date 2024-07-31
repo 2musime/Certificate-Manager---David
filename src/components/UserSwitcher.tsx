@@ -13,10 +13,10 @@ const UserSwitcher: React.FC = () => {
     <div className="user-switcher">
       <label htmlFor="user-select">User:</label>
       <select id="user-select" value={user} onChange={handleUserChange}>
-        <option value="user1">User 1</option>
-        <option value="user2">User 2</option>
-        <option value="user3">User 3</option>
-        <option value="user4">User 4</option>
+        <option value="David">David</option>
+        <option value="Haris">Haris</option>
+        <option value="Simon">Simon</option>
+        <option value="Scofield">Scofield</option>
       </select>
     </div>
   );

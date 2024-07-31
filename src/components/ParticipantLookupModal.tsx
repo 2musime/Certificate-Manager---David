@@ -26,9 +26,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
   const participants: IParticipant[] = [
     { name: 'Simon', firstName: 'John', userId: '123', department: 'ITM', plant: 'Plant1', email: 'john.doe@example.com' },
     { name: 'Wolfgang', firstName: 'Jane', userId: '456', department: 'ITM', plant: 'Plant2', email: 'jane.smith@example.com' },
-    { name: 'Doe', firstName: 'Richard', userId: '789', department: 'ITM', plant: 'Plant3', email: 'richard.doe@example.com' },
-    { name: 'Smith', firstName: 'Anna', userId: '101', department: 'ITM', plant: 'Plant4', email: 'anna.smith@example.com' },
-    { name: 'Taylor', firstName: 'Emily', userId: '112', department: 'ITM', plant: 'Plant5', email: 'emily.taylor@example.com' },
+     { name: 'Taylor', firstName: 'Emily', userId: '112', department: 'ITM', plant: 'Plant5', email: 'emily.taylor@example.com' },
   ];
 
   const filteredParticipants = participants.filter(participant => {
@@ -138,7 +136,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
               <label htmlFor="department">Department</label>
               <input
                 type="text"
-                id="department"
+                id="department" readOnly
                 name="department"
                 value={departmentSearchTerm}
                 onChange={handleSearchChange}

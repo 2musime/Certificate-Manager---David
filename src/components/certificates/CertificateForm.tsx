@@ -8,6 +8,7 @@ import { getCertificates } from "../../DB/indexedDB";
 import SupplierLookupModal from '../SupplierLookupModal';
 import ParticipantLookupModal from '../ParticipantLookupModal';
 import { useLanguage } from '../context/LanguageContext';
+import CommentModal from '../CommentModal';
 
 interface ICertificateForm {
   isEdit?: boolean;
@@ -32,7 +33,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false);
   const [participants, setParticipants] = useState<{ name: string; department: string; email: string }[]>([]);
-
+  const [openComment,setOpenComment]=useState(false)
   useEffect(() => {
     if (isEdit && certificateId) {
       async function fetchData() {
@@ -210,7 +211,11 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           </div>
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
-          
+
+          <div className="comment-container">
+              <button type="button" onClick={()=>setOpenComment(true)}>New Comment</button>
+          </div>
+          {openComment&&<CommentModal onAddComment={()=>"hello"} onClose={()=>setOpenComment(false)} />}
           <div className="participant-group">
             <div className="participant-container">
               <label>Assigned users</label>

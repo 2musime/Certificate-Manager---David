@@ -132,6 +132,7 @@ select{
   height: 100%;
 }
 
+
 .form-actions {
   display: flex;  
   align-self: flex-end;
@@ -173,4 +174,16 @@ label {
   color: #423e3e;
   font-size: small;
   font-style: italic;
+}
+.comment-container button{
+  margin-left: 220px;
+  background-color: #1482ff;
+  height: 50px;
+  color: white;
+  width: 150px;
+  font-size: 1rem;
+  border: none;
+}
+.comment-container button:hover{
+  cursor: pointer;
 }

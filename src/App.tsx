@@ -1,4 +1,3 @@
-// App.tsx
 import React, { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
@@ -14,13 +13,12 @@ import { UserProvider } from './components/context/UserContext';
 import { useLanguage } from './components/context/LanguageContext';
 
 const Start: FC = () => {
-  return <h1>Start Page</h1>;
+  return <h1>Start</h1>;
 };
 
 const App: FC = () => {
   return (
     <Router>
-      <UserProvider>
         <div className="App">
           <header className="main-header">
             <div className="header">DCCS Tuzla</div>
@@ -45,7 +43,6 @@ const App: FC = () => {
             </main>
           </div>
         </div>
-      </UserProvider>
     </Router>
   );
 };
