@@ -84,6 +84,7 @@ const Example1: React.FC = () => {
 
   return (
     <div>
+      <h2></h2>
       <Table data={[]} onNewCertificate={() => navigate('/new-certificate')} />
       <table>
         <thead>

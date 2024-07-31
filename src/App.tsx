@@ -1,3 +1,4 @@
+// App.tsx
 import React, { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
@@ -13,13 +14,10 @@ import { UserProvider } from './components/context/UserContext';
 import { useLanguage } from './components/context/LanguageContext';
 
 const Start: FC = () => {
-  const { translations } = useLanguage();
-  return <h1>{translations['start']}</h1>;
+  return <h1>Start Page</h1>;
 };
 
 const App: FC = () => {
-  const { translations } = useLanguage();
-
   return (
     <Router>
       <UserProvider>
