@@ -1,21 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { addCertificate, updateCertificate, getCertificates } from "../../DB/indexedDB";
+import {  addCertificate, updateCertificate } from "../../DB/indexedDB";
 import { useNavigate } from 'react-router';
 import "../../styles/NewCertificate.css";
 import Search from '../../icons/search';
 import X from '../../icons/x';
+import { getCertificates } from "../../DB/indexedDB";
 import SupplierLookupModal from '../SupplierLookupModal';
 import ParticipantLookupModal from '../ParticipantLookupModal';
 import { useLanguage } from '../context/LanguageContext';
 
 interface ICertificateForm {
-  isEdit?: boolean;
-  certificateId?: number;
+  isEdit?: boolean
+  certificateId?: number
 }
 
-const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: ICertificateForm) => {
-  const { translations } = useLanguage();
+const CertificateForm: React.FC<ICertificateForm> = ({isEdit, certificateId}:ICertificateForm) => {
   const navigate = useNavigate();
+  const { translations } = useLanguage();
   const validFromRef = useRef<HTMLInputElement>(null);
   const validToRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
@@ -31,25 +32,30 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false);
   const [participants, setParticipants] = useState<{ name: string; department: string; email: string }[]>([]);
 
-  useEffect(() => {
-    if (isEdit && certificateId) {
+  useEffect(()=> {
+    if(isEdit && certificateId){
       async function fetchData() {
         const certificates = await getCertificates();
-        const filteredCertificate = certificates.find((certificate) => certificate.id === certificateId);
-        if (filteredCertificate) {
-          setFormData({
-            validFrom: filteredCertificate.validFrom || '',
-            validTo: filteredCertificate.validTo || '',
-            certificateType: filteredCertificate.certificateType,
-            supplier: filteredCertificate.supplier,
-            pdfFile: filteredCertificate.pdfFile || null,
-            pdfPreview: filteredCertificate.pdfFile || null,
-          });
-        }
-      }
+
+const filteredCertificate = certificates.filter((certificate) => certificate.id ===certificateId)
+
+filteredCertificate.map((certificate)=> (
+
+
+  setFormData({
+    validFrom: certificate.validFrom ? certificate.validFrom : null,
+    validTo: certificate.validTo ? certificate.validTo : null,
+    certificateType: certificate.certificateType,
+    supplier: certificate.supplier,
+    pdfFile: certificate.pdfFile || null,
+    pdfPreview: certificate.pdfPreview || null
+  })
+))}
+  
       fetchData();
     }
-  }, [isEdit, certificateId]);
+
+  }, [certificateId])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -64,58 +70,57 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
       [e.target.name]: e.target.value,
     });
   };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file && file.type === 'application/pdf') {
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.result) {
-          setFormData({
-            ...formData,
-            pdfFile: reader.result as string,
-            pdfPreview: reader.result as string,
-          });
+                setFormData({
+        ...formData,
+        pdfPreview: reader.result as string,
+      });
         }
       };
       reader.readAsDataURL(file);
     } else {
-      alert(translations['invalidFileError']);
-      alert(translations['invalidFileError']);
+      alert('Please upload a valid file.');
     }
   };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.pdfPreview) {
-      setError(translations['pdfRequiredError']);
+      setError('Please upload a PDF document before submitting.'); 
       return;
     }
+
     setError(null);
 
     try {
-      console.log("Hellow world")
       if (certificateId && isEdit) {
         await updateCertificate({
           supplier: formData.supplier,
           certificateType: formData.certificateType,
           validFrom: formData.validFrom,
           validTo: formData.validTo,
-          pdfFile: formData.pdfFile,
-        }, certificateId);
-      } else {
+          pdfFile: formData.pdfPreview,
+        }, certificateId as number)
+      }
+      else{
         await addCertificate({
           supplier: formData.supplier,
           certificateType: formData.certificateType,
           validFrom: formData.validFrom,
           validTo: formData.validTo,
-          pdfFile: formData.pdfFile,
+          pdfFile: formData.pdfPreview,
         });
       }
+      
       navigate('/example1');
       handleReset();
     } catch (error) {
-      setError('An error occurred while saving the certificate.');
+      setError('An error occurred while saving the certificate.'); 
     }
   };
 
@@ -128,7 +133,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
       pdfFile: null,
       pdfPreview: null,
     });
-    setError(null);
+    setError(null); 
   };
 
   const handleSelectSupplier = (supplier: string) => {
@@ -150,6 +155,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
     
     setIsParticipantModalOpen(false);
   };
+
   return (
     <>
       <form onSubmit={handleSubmit} className="new-certificate-form">
@@ -170,9 +176,9 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           </div>
           
           <div className="form-group">
-            <label htmlFor="certificateType">{translations['certificateType']}</label>
+            <label htmlFor="certificateType">Certificate Type</label>
             <select name="certificateType" value={formData.certificateType} onChange={handleChanges} required>
-              <option value="">{translations['selectyouroption']}</option>
+              <option value="">Select your option</option>
               <option value="Permission of printing">Permission of printing</option>
               <option value="OHSAS 18001">OHSAS 18001</option>
               <option value="Attendance">Attendance</option>
@@ -183,14 +189,13 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           <div className="form-group">
             <label>{translations['validFrom']}</label>
             <input
-              type="text"
-              placeholder={translations['clickToSelectDate']}
+              type="text" required
+              placeholder='Click to select date'
               ref={validFromRef}
               name="validFrom"
               value={formData.validFrom}
               onChange={handleChange}
               onFocus={() => { validFromRef.current!.type = "date"; }}
-              required
             />
           </div>
 
@@ -198,7 +203,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
             <label>{translations['validTo']}</label>
             <input
               type="text"
-              placeholder={translations['clickToSelectDate']}
+              placeholder="Click to select date"
               ref={validToRef}
               name="validTo"
               value={formData.validTo}
@@ -244,15 +249,15 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
 
         <div className="form-right">
           <div className="form-group">
-            <input type="file" name="pdfFile" accept="application/pdf" onChange={handleFileChange} style={{ display: 'none' }} />
+            <input type="file" name="pdfFile" accept="application/pdf" onChange={handleFileChange} required style={{ display: 'none' }} />
             <button type="button" className="upload-button" onClick={() => {
               const fileInput = document.querySelector('input[name="pdfFile"]') as HTMLInputElement;
               fileInput?.click();
             }}>{translations['upload']}</button>
           </div>
           <div className="pdf-preview-container">
-            {formData.pdfPreview ? (
-              <iframe src={formData.pdfPreview} title={translations['pdfPreview']} className="pdf-preview" />
+            {formData.pdfPreview||formData.pdfFile ? (
+              <iframe src={formData.pdfPreview||formData.pdfFile||''} title={translations['pdfPreview']} className="pdf-preview" />
             ) : (
               <div className="pdf-placeholder">{translations['noPreview']}</div>
             )}
