@@ -94,6 +94,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
     setError(null);
 
     try {
+      console.log("Hellow world")
       if (certificateId && isEdit) {
         await updateCertificate({
           supplier: formData.supplier,
@@ -109,7 +110,6 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           validFrom: formData.validFrom,
           validTo: formData.validTo,
           pdfFile: formData.pdfFile,
-          id: 0
         });
       }
       navigate('/example1');
