@@ -40,20 +40,48 @@
   font-size: small;
   font-style: italic;
 }
+.form-groups label {
+  margin-bottom: 5px;
+  margin-left: 20px;
+  color: #423e3e;
+  font-size: small;
+  font-style: italic;
+}
 
 .form-group input[type="text"],
-.form-group input[type="date"] {
+.form-group input[type="date"],
+.form-group input [type="button"] {
   margin-left: 20px;
   width: 360px;
   border: 0.5px solid gray;
   padding: 8px;
   margin-bottom: 10px;
 }
+
+
 .input-container{
   display: flex;
   position: relative;
 }
-.icon{
+
+.participant-container{
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-button {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  border-radius: none;
+  padding: 12px;
+  width: 50%;
+  height: 40px;
+  border: 10x solid rgb(33, 33, 33);
+}
+.form-group .icon{
   position: absolute;
   right: 0;
   border: 1px solid rgb(49, 49, 49);
@@ -64,11 +92,9 @@
   margin-bottom: 10px;
 
 }
-
 .input-container > :nth-child(2){
   right: 2rem;
 }
-
 select{
   margin-left: 20px;
   width: 375px;
@@ -76,7 +102,6 @@ select{
   padding: 8px;
   margin-bottom: 10px;
 }
-
 .upload-button {
   background-color: #007bff;
   color: white;
@@ -113,7 +138,6 @@ select{
   margin-top: 10px;
   gap: 10px;
 }
-
 .form-actions > button {
   margin-top: 20px;
   height: 30px;
@@ -138,4 +162,15 @@ select{
   color: red;
   margin-top: 10px;
   font-size: 14px;
+}
+.participant-group{
+  width: 89%;
+  height: fit-content;
+}
+
+label {
+  margin-bottom: 5px;
+  color: #423e3e;
+  font-size: small;
+  font-style: italic;
 }

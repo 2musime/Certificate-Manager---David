@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getCertificates, deleteCertificate } from '../DB/indexedDB';
 import Button from './Button';
-import GearIcon from '../icons/gear';
 import Table from './Table';
+import GearIcon from '../icons/gear';
 import '../styles/Table.css';
 import { useNavigate } from 'react-router';
 import { useLanguage } from './context/LanguageContext';
@@ -26,7 +26,7 @@ const Example1: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this certificate?')) {
+    if (window.confirm("Are you sure")) {
       try {
         await deleteCertificate(id);
         setCertificates((prevCertificates) =>
@@ -44,12 +44,14 @@ const Example1: React.FC = () => {
   };
 
   const renderRowActions = (row: { [key: string]: any }) => {
-    return(
-    <GearIcon
-      onEdit={() => handleEditNavigate(row.id)}
-      onDelete={() => handleDelete(row.id)}
-    />
-  )};
+    return (
+      <GearIcon
+        onEdit={() => handleEditNavigate(row.id)}
+        onDelete={() => handleDelete(row.id)}
+      />
+    );
+  };
+
   const headers = [translations['supplier'], translations['certificateType'], translations['validFrom'], translations['validTo']];
 
   const tableData = certificates.map((certificate) => ({
@@ -62,7 +64,7 @@ const Example1: React.FC = () => {
 
   return (
     <div>
-      <Button data={[]} onNewCertificate={() => navigate('/new-certificate')} />
+      <Button onNewCertificate={() => navigate('/new-certificate')} />
       <Table
         headers={headers}
         data={tableData}

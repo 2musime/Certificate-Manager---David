@@ -57,7 +57,7 @@ export const deleteCertificate = async (id: IDBValidKey | IDBKeyRange) => {
   });
 };
 
-export const addCertificate = async (certificate: { supplier: string; certificateType: string; validFrom: string; validTo: string; pdfFile: string|null; id: number}) => {
+export const addCertificate = async (certificate: { supplier: string; certificateType: string; validFrom: string; validTo: string; pdfFile: string|null; id?: number}) => {
   const db = await initializeDB();
   return new Promise<void>((resolve, reject) => {
     const transaction = db.transaction('certificates', 'readwrite');
