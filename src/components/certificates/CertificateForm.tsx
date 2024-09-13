@@ -18,7 +18,6 @@ interface ICertificateForm {
 const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: ICertificateForm) => {
   const { translations } = useLanguage();
   const navigate = useNavigate();
-  const { translations } = useLanguage();
   const validFromRef = useRef<HTMLInputElement>(null);
   const validToRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
@@ -32,6 +31,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
   const [error, setError] = useState<string | null>(null);
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false);
+  const [comments,setComments]=useState<any[]>([])
   const [participants, setParticipants] = useState<{ name: string; department: string; email: string }[]>([]);
   const [openComment,setOpenComment]=useState(false)
   useEffect(() => {
@@ -215,8 +215,13 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           <div className="comment-container">
               <button type="button" onClick={()=>setOpenComment(true)}>New Comment</button>
           </div>
-          {openComment&&<CommentModal onAddComment={()=>"hello"} onClose={()=>setOpenComment(false)} />}
+          {openComment&&<CommentModal onAddComment={(e)=>{
+            setComments((prev)=>[...prev,e])
+                    }} onClose={()=>setOpenComment(false)} />}
           <div className="participant-group">
+            {comments?.map((c)=>(
+              <><p>{c?.user}</p><p>{c?.text}</p></>
+            ))}
             <div className="participant-container">
               <label>Assigned users</label>
               <button

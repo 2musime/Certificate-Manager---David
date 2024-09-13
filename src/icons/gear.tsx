@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import { useLanguage } from '../components/context/LanguageContext';
 import "../styles/GearIcon.css";
-=======
->>>>>>> f67b3b1 (Feature/Task-5-KAN-55 Delete functionality is implemented well)
 import Dropdown from '../components/Dropdown';
 
 const GearIcon: React.FC<{ onEdit: () => void; onDelete: () => void }> = ({ onEdit, onDelete }) => {
@@ -15,11 +12,7 @@ const GearIcon: React.FC<{ onEdit: () => void; onDelete: () => void }> = ({ onEd
       className="gear-icon-container"
       onMouseEnter={() => setIsDropdownVisible(true)}
       onMouseLeave={() => setIsDropdownVisible(false)}
-<<<<<<< HEAD
       onClick={() => setIsDropdownVisible(prev => !prev)} 
-=======
-      onClick={() => setIsDropdownVisible((prev) => prev)}
->>>>>>> f67b3b1 (Feature/Task-5-KAN-55 Delete functionality is implemented well)
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
