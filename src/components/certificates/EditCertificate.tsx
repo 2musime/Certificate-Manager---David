@@ -3,7 +3,7 @@ import CertificateForm from "./CertificateForm";
 import { useParams } from "react-router-dom";
 
 const EditCertificate: React.FC =()=>{
-    const {id} = useParams<{id:string}>();
+    const {id} = useParams<{id:string}>()
     const [certificateId, setCertificateId] = useState<number | undefined>(undefined)
 
     useEffect(() => {

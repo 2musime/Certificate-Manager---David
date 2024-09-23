@@ -2,7 +2,7 @@
   "language_label": "Sprache:",
   "english_option": "Englisch",
   "german_option": "Deutsch",
-  "start": "Starten",
+  "start": "Start",
   "example1": "Beispiel 1",
   "example2": "Beispiel 2",
   "example3": "Beispiel 3",
@@ -11,7 +11,7 @@
   "save": "Speichern",
   "upload": "Hochladen",
   "supplier": "Lieferant",
-  "certificateType": "Art des Zertifikats",
+  "certificateType": "Zertifikatstyp",
   "validFrom": "Gültig ab",
   "validTo": "Gültig bis",
   "uploadPdf": "PDF hochladen",
@@ -29,7 +29,8 @@
   "supplier_list": "Lieferantenliste",
   "select": "Auswählen",
   "cancel": "Abbrechen",
-  "newcertificate": "Neues Zertifikat",
-  "clickToSelectDate": "Datum auswählen",
-  "selectyouroption": "Wählen Sie Ihre Option"
+  "newComment":"Nieuwe reactie",
+  "name":"Naam",
+  "department":"Afdeling",
+  "email":"E-mail"
 }

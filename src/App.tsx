@@ -9,7 +9,6 @@ import AddCertificate from './components/certificates/AddCertificate';
 import EditCertificate from './components/certificates/EditCertificate';
 import Header from './components/Header';
 import UserSwitcher from './components/UserSwitcher';
-import { UserProvider } from './components/context/UserContext';
 import { useLanguage } from './components/context/LanguageContext';
 
 const Start: FC = () => {
@@ -18,9 +17,9 @@ const Start: FC = () => {
 };
 
 const App: FC = () => {
+  
   return (
     <Router>
-      <UserProvider>
         <div className="App">
           <header className="main-header">
             <div className="header">DCCS Tuzla</div>
@@ -45,7 +44,6 @@ const App: FC = () => {
             </main>
           </div>
         </div>
-      </UserProvider>
     </Router>
   );
 };

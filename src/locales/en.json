@@ -29,7 +29,8 @@
   "supplier_list": "Supplier list",
   "select": "Select",
   "cancel": "Cancel",
-  "newcertificate": "New Certificate",
-  "clickToSelectDate":"Click to select date",
-  "selectyouroption": "Select your option"
+  "newComment": "New comment",
+  "name":"Name",
+  "department":"Department",
+  "email":"Email"
 }

@@ -5,6 +5,7 @@ import Home from "../icons/home";
 import Menu from "../icons/menu";
 import Down from "../icons/down";
 import { useLanguage } from "./context/LanguageContext";
+// import { useUser } from "./context/UserContext";
 
 interface MenuItem {
   title: string;
@@ -19,6 +20,7 @@ const menuItems: MenuItem[] = [
 
 const Sidebar: React.FC = () => {
   const { translations } = useLanguage();
+  // const { user } = useUser();
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -58,6 +60,9 @@ const Sidebar: React.FC = () => {
           ))}
         </div>
       )}
+      {/* <div className="signed-user">
+        Signed user: {user}
+      </div> */}
     </div>
   );
 };

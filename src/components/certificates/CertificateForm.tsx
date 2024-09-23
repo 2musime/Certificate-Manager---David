@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {  addCertificate, updateCertificate } from "../../DB/indexedDB";
+import { addCertificate, updateCertificate } from "../../DB/indexedDB";
 import { useNavigate } from 'react-router';
 import "../../styles/NewCertificate.css";
 import Search from '../../icons/search';
@@ -8,15 +8,16 @@ import { getCertificates } from "../../DB/indexedDB";
 import SupplierLookupModal from '../SupplierLookupModal';
 import ParticipantLookupModal from '../ParticipantLookupModal';
 import { useLanguage } from '../context/LanguageContext';
+import CommentModal from '../CommentModal';
 
 interface ICertificateForm {
-  isEdit?: boolean
-  certificateId?: number
+  isEdit?: boolean;
+  certificateId?: number;
 }
 
-const CertificateForm: React.FC<ICertificateForm> = ({isEdit, certificateId}:ICertificateForm) => {
-  const navigate = useNavigate();
+const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: ICertificateForm) => {
   const { translations } = useLanguage();
+  const navigate = useNavigate();
   const validFromRef = useRef<HTMLInputElement>(null);
   const validToRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
@@ -30,32 +31,28 @@ const CertificateForm: React.FC<ICertificateForm> = ({isEdit, certificateId}:ICe
   const [error, setError] = useState<string | null>(null);
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false);
+  const [comments,setComments]=useState<any[]>([])
   const [participants, setParticipants] = useState<{ name: string; department: string; email: string }[]>([]);
-
-  useEffect(()=> {
-    if(isEdit && certificateId){
+  const [openComment,setOpenComment]=useState(false)
+  useEffect(() => {
+    if (isEdit && certificateId) {
       async function fetchData() {
         const certificates = await getCertificates();
-
-const filteredCertificate = certificates.filter((certificate) => certificate.id ===certificateId)
-
-filteredCertificate.map((certificate)=> (
-
-
-  setFormData({
-    validFrom: certificate.validFrom ? certificate.validFrom : null,
-    validTo: certificate.validTo ? certificate.validTo : null,
-    certificateType: certificate.certificateType,
-    supplier: certificate.supplier,
-    pdfFile: certificate.pdfFile || null,
-    pdfPreview: certificate.pdfPreview || null
-  })
-))}
-  
+        const filteredCertificate = certificates.filter((certificate) => certificate.id === certificateId);
+        filteredCertificate.map((certificate) => (
+          setFormData({
+            validFrom: certificate.validFrom ? certificate.validFrom : '',
+            validTo: certificate.validTo ? certificate.validTo : '',
+            certificateType: certificate.certificateType,
+            supplier: certificate.supplier,
+            pdfFile: certificate.pdfFile || null,
+            pdfPreview: certificate.pdfPreview || null
+          })
+        ));
+      }
       fetchData();
     }
-
-  }, [certificateId])
+  }, [certificateId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -70,33 +67,32 @@ filteredCertificate.map((certificate)=> (
       [e.target.name]: e.target.value,
     });
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file && file.type === 'application/pdf') {
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.result) {
-                setFormData({
-        ...formData,
-        pdfPreview: reader.result as string,
-      });
+          setFormData({
+            ...formData,
+            pdfFile: reader.result as string,
+            pdfPreview: reader.result as string,
+          });
         }
       };
       reader.readAsDataURL(file);
     } else {
-      alert('Please upload a valid file.');
+      alert(translations['invalidFileError']);
     }
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.pdfPreview) {
-      setError('Please upload a PDF document before submitting.'); 
+      setError(translations['pdfRequiredError']);
       return;
     }
-
-    setError(null);
-
     try {
       if (certificateId && isEdit) {
         await updateCertificate({
@@ -104,19 +100,17 @@ filteredCertificate.map((certificate)=> (
           certificateType: formData.certificateType,
           validFrom: formData.validFrom,
           validTo: formData.validTo,
-          pdfFile: formData.pdfPreview,
-        }, certificateId as number)
-      }
-      else{
+          pdfFile: formData.pdfFile,
+        }, certificateId);
+      } else {
         await addCertificate({
           supplier: formData.supplier,
           certificateType: formData.certificateType,
           validFrom: formData.validFrom,
           validTo: formData.validTo,
-          pdfFile: formData.pdfPreview,
+          pdfFile: formData.pdfFile,
         });
       }
-      
       navigate('/example1');
       handleReset();
     } catch (error) {
@@ -176,7 +170,7 @@ filteredCertificate.map((certificate)=> (
           </div>
           
           <div className="form-group">
-            <label htmlFor="certificateType">Certificate Type</label>
+            <label htmlFor="certificateType">{translations['certificateType']}</label>
             <select name="certificateType" value={formData.certificateType} onChange={handleChanges} required>
               <option value="">Select your option</option>
               <option value="Permission of printing">Permission of printing</option>
@@ -214,8 +208,17 @@ filteredCertificate.map((certificate)=> (
           </div>
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
-          
+
+          <div className="comment-container">
+              <button type="button" onClick={()=>setOpenComment(true)}>{translations['newComment']}</button>
+          </div>
+          {openComment&&<CommentModal onAddComment={(e)=>{
+            setComments((prev)=>[...prev,e])
+                    }} onClose={()=>setOpenComment(false)} />}
           <div className="participant-group">
+            {comments?.map((c)=>(
+              <><p><b>User:</b>{c?.user}</p><p><b>Comment:</b>{c?.text}</p></>
+            ))}
             <div className="participant-container">
               <label>Assigned users</label>
               <button
@@ -229,9 +232,9 @@ filteredCertificate.map((certificate)=> (
             <table className="participant-table">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>Email</th>
+                  <th>{translations['name']}</th>
+                  <th>{translations['department']}</th>
+                  <th>{translations['email']}</th>
                 </tr>
               </thead>
               <tbody>

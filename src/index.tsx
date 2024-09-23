@@ -15,6 +15,3 @@ root.render(
     </LanguageProvider>
   </React.StrictMode>
 );
-
-
-
