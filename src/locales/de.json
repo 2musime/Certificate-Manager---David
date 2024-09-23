@@ -29,5 +29,8 @@
   "supplier_list": "Lieferantenliste",
   "select": "Auswählen",
   "cancel": "Abbrechen",
-  "newComment":"Nieuwe reactie"
+  "newComment":"Nieuwe reactie",
+  "name":"Naam",
+  "department":"Afdeling",
+  "email":"E-mail"
 }

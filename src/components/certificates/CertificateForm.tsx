@@ -76,6 +76,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
         if (reader.result) {
           setFormData({
             ...formData,
+            pdfFile: reader.result as string,
             pdfPreview: reader.result as string,
           });
         }
@@ -169,7 +170,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           </div>
           
           <div className="form-group">
-            <label htmlFor="certificateType">Certificate Type</label>
+            <label htmlFor="certificateType">{translations['certificateType']}</label>
             <select name="certificateType" value={formData.certificateType} onChange={handleChanges} required>
               <option value="">Select your option</option>
               <option value="Permission of printing">Permission of printing</option>
@@ -209,14 +210,14 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           {error && <p style={{ color: 'red' }}>{error}</p>}
 
           <div className="comment-container">
-              <button type="button" onClick={()=>setOpenComment(true)}>New Comment</button>
+              <button type="button" onClick={()=>setOpenComment(true)}>{translations['newComment']}</button>
           </div>
           {openComment&&<CommentModal onAddComment={(e)=>{
             setComments((prev)=>[...prev,e])
                     }} onClose={()=>setOpenComment(false)} />}
           <div className="participant-group">
             {comments?.map((c)=>(
-              <><p>{c?.user}</p><p>{c?.text}</p></>
+              <><p><b>User:</b>{c?.user}</p><p><b>Comment:</b>{c?.text}</p></>
             ))}
             <div className="participant-container">
               <label>Assigned users</label>
@@ -231,9 +232,9 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
             <table className="participant-table">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>Email</th>
+                  <th>{translations['name']}</th>
+                  <th>{translations['department']}</th>
+                  <th>{translations['email']}</th>
                 </tr>
               </thead>
               <tbody>
@@ -258,8 +259,8 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
             }}>{translations['upload']}</button>
           </div>
           <div className="pdf-preview-container">
-            {formData.pdfPreview ? (
-              <iframe src={formData.pdfPreview} title={translations['pdfPreview']} className="pdf-preview" />
+            {formData.pdfPreview||formData.pdfFile ? (
+              <iframe src={formData.pdfPreview||formData.pdfFile||''} title={translations['pdfPreview']} className="pdf-preview" />
             ) : (
               <div className="pdf-placeholder">{translations['noPreview']}</div>
             )}

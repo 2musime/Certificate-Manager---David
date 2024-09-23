@@ -1,4 +1,4 @@
-.modal {
+.pmodal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 1000;
   }
   
-  .modal-content {
+  .pmodal-content {
     background: rgb(255, 255, 255);
     border-radius: 8px;
     padding: 20px;

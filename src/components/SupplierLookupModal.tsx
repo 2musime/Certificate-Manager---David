@@ -40,8 +40,8 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
   });
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="smodal-overlay">
+      <div className="smodal-content">
         <div className="topbar">
           <h3>{translate('search_for_suppliers')}</h3>
           <span className="close-button" onClick={onClose}>&times;</span>

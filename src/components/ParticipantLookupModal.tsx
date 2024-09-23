@@ -87,8 +87,8 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="pmodal-overlay">
+      <div className="pmodal-content">
         <div className="topbar">
           <h3>Search for persons</h3>
           <span className="close-button" onClick={onClose}>&times;</span>

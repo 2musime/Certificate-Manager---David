@@ -23,17 +23,17 @@ const CommentModal: React.FC<CommentModalProps> = ({ onAddComment, onClose }) =>
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="cmodal-overlay">
+      <div className="cmodal-content">
         <h2>Add Comment</h2>
         <h5>{user}</h5>
-        <textarea
+        <textarea required
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
           placeholder="Comment"/>
-        <div className="modal-buttons">
-          <button onClick={handleSubmit}>Send</button>
-          <button onClick={onClose}>Close</button>
+        <div className="cmodal-buttons">
+          <button onClick={handleSubmit} className='submit'>Send</button>
+          <button onClick={onClose} className='closing'>Close</button>
         </div>
       </div>
     </div>

@@ -9,12 +9,15 @@ import AddCertificate from './components/certificates/AddCertificate';
 import EditCertificate from './components/certificates/EditCertificate';
 import Header from './components/Header';
 import UserSwitcher from './components/UserSwitcher';
+import { useLanguage } from './components/context/LanguageContext';
 
 const Start: FC = () => {
-  return <h1>Start</h1>;
+  const { translations } = useLanguage();
+  return <h1>{translations['start']}</h1>;
 };
 
 const App: FC = () => {
+  
   return (
     <Router>
         <div className="App">
