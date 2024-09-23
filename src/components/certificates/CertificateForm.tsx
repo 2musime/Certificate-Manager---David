@@ -76,6 +76,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
         if (reader.result) {
           setFormData({
             ...formData,
+            pdfFile: reader.result as string,
             pdfPreview: reader.result as string,
           });
         }
@@ -92,9 +93,6 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
       setError(translations['pdfRequiredError']);
       return;
     }
-
-    setError(null);
-
     try {
       if (certificateId && isEdit) {
         await updateCertificate({
@@ -102,16 +100,15 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           certificateType: formData.certificateType,
           validFrom: formData.validFrom,
           validTo: formData.validTo,
-          pdfFile: formData.pdfPreview,
-        }, certificateId as number)
-      }
-      else{
+          pdfFile: formData.pdfFile,
+        }, certificateId);
+      } else {
         await addCertificate({
           supplier: formData.supplier,
           certificateType: formData.certificateType,
           validFrom: formData.validFrom,
           validTo: formData.validTo,
-          pdfFile: formData.pdfPreview,
+          pdfFile: formData.pdfFile,
         });
       }
       navigate('/example1');
@@ -173,7 +170,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           </div>
           
           <div className="form-group">
-            <label htmlFor="certificateType">Certificate Type</label>
+            <label htmlFor="certificateType">{translations['certificateType']}</label>
             <select name="certificateType" value={formData.certificateType} onChange={handleChanges} required>
               <option value="">Select your option</option>
               <option value="Permission of printing">Permission of printing</option>
@@ -213,14 +210,14 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           {error && <p style={{ color: 'red' }}>{error}</p>}
 
           <div className="comment-container">
-              <button type="button" onClick={()=>setOpenComment(true)}>New Comment</button>
+              <button type="button" onClick={()=>setOpenComment(true)}>{translations['newComment']}</button>
           </div>
           {openComment&&<CommentModal onAddComment={(e)=>{
             setComments((prev)=>[...prev,e])
                     }} onClose={()=>setOpenComment(false)} />}
           <div className="participant-group">
             {comments?.map((c)=>(
-              <><p>{c?.user}</p><p>{c?.text}</p></>
+              <><p><b>User:</b>{c?.user}</p><p><b>Comment:</b>{c?.text}</p></>
             ))}
             <div className="participant-container">
               <label>Assigned users</label>
@@ -235,9 +232,9 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
             <table className="participant-table">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>Email</th>
+                  <th>{translations['name']}</th>
+                  <th>{translations['department']}</th>
+                  <th>{translations['email']}</th>
                 </tr>
               </thead>
               <tbody>

@@ -5,7 +5,6 @@ import GearIcon from '../icons/gear';
 import '../styles/Table.css';
 import { useNavigate } from 'react-router';
 import { useLanguage } from './context/LanguageContext';
-import Button from './Button';
 
 const Example1: React.FC = () => {
   const navigate = useNavigate();
@@ -36,42 +35,39 @@ const Example1: React.FC = () => {
         console.error('Failed to delete certificate', error);
       }
     }
-    navigate('/example1');
   };
-
-  const handleRowClick = (rowData: { [key: string]: any }) => {
-    handleEditNavigate(rowData.id);
-  };
-
-  const renderRowActions = (row: { [key: string]: any }) => {
-    return (
-      <GearIcon
-        onEdit={() => handleEditNavigate(row.id)}
-        onDelete={() => handleDelete(row.id)}
-      />
-    );
-  };
-
-  const headers = [translations['supplier'], translations['certificateType'], translations['validFrom'], translations['validTo']];
-
-  const tableData = certificates.map((certificate) => ({
-    supplier: certificate.supplier,
-    certificateType: certificate.certificateType,
-    validFrom: certificate.validFrom,
-    validTo: certificate.validTo,
-    id: certificate.id,
-  }));
 
   return (
     <div>
-      <Button onNewCertificate={() => navigate('/new-certificate')} />
-      <Table
-        headers={headers}
-        data={tableData}
-        onRowClick={handleRowClick}
-        renderRowActions={renderRowActions}
-        selectableRows={false}
-      />
+      <h2></h2>
+      <Table data={[]} onNewCertificate={() => navigate('/new-certificate')} />
+      <table>
+        <thead>
+          <tr>
+            <td></td>
+            <td>{translations['supplier']}</td>
+            <td>{translations['certificateType']}</td>
+            <td>{translations['validFrom']}</td>
+            <td>{translations['validTo']}</td>
+          </tr>
+        </thead>
+        <tbody>
+          {certificates.map((certificate) => (
+            <tr key={certificate.id}>
+              <td>
+                <GearIcon
+                  onEdit={() => handleEditNavigate(certificate.id)}
+                  onDelete={() => handleDelete(certificate.id)}
+                />
+              </td>
+              <td>{certificate.supplier}</td>
+              <td>{certificate.certificateType}</td>
+              <td>{certificate.validFrom}</td>
+              <td>{certificate.validTo}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

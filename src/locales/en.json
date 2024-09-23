@@ -29,5 +29,8 @@
   "supplier_list": "Supplier list",
   "select": "Select",
   "cancel": "Cancel",
-  "newComment": "New comment"
+  "newComment": "New comment",
+  "name":"Name",
+  "department":"Department",
+  "email":"Email"
 }
