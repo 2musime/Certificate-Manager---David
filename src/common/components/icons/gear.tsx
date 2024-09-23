@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../components/context/LanguageContext';
-import "../styles/GearIcon.css";
-import Dropdown from '../components/Dropdown';
+import { useLanguage } from '../../context/LanguageContext';
+import "../icons/GearIcon.css";
+import Dropdown from './Dropdown';
 
 const GearIcon: React.FC<{ onEdit: () => void; onDelete: () => void }> = ({ onEdit, onDelete }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);

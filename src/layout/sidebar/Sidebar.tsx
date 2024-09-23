@@ -1,11 +1,10 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Sidebar.css";
-import Home from "../icons/home";
-import Menu from "../icons/menu";
-import Down from "../icons/down";
-import { useLanguage } from "./context/LanguageContext";
-// import { useUser } from "./context/UserContext";
+import "../sidebar/Sidebar.css";
+import Home from "../../common/components/icons/home";
+import Menu from "../../common/components/icons/menu";
+import Down from "../../common/components/icons/down";
+import { useLanguage } from "../../common/context/LanguageContext";
 
 interface MenuItem {
   title: string;
@@ -20,7 +19,6 @@ const menuItems: MenuItem[] = [
 
 const Sidebar: React.FC = () => {
   const { translations } = useLanguage();
-  // const { user } = useUser();
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -60,9 +58,6 @@ const Sidebar: React.FC = () => {
           ))}
         </div>
       )}
-      {/* <div className="signed-user">
-        Signed user: {user}
-      </div> */}
     </div>
   );
 };

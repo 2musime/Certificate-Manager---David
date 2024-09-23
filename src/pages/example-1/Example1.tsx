@@ -1,26 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { getCertificates, deleteCertificate } from '../DB/indexedDB';
-import Table from './Table';
-import GearIcon from '../icons/gear';
-import '../styles/Table.css';
+import { getCertificates, deleteCertificate } from '../../common/components/DB/indexedDB';
+import Table from '../../common/components/table/Table';
+import GearIcon from '../../common/components/icons/gear';
+import '../example-1/Table.css';
 import { useNavigate } from 'react-router';
-import { useLanguage } from './context/LanguageContext';
+import { useLanguage } from '../../common/context/LanguageContext';
+
+interface Certificate {
+  id: number;
+  supplier: string;
+  certificateType: string;
+  validFrom: string;
+  validTo: string;
+}
 
 const Example1: React.FC = () => {
   const navigate = useNavigate();
-  const [certificates, setCertificates] = useState<any[]>([]);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
   const { translations } = useLanguage();
 
   useEffect(() => {
     async function fetchData() {
-      const data = await getCertificates();
+      const data: Certificate[] = await getCertificates();
       setCertificates(data);
     }
 
     fetchData();
   }, []);
 
-  const handleEditNavigate = (id: string) => {
+  const handleEditNavigate = (id: number) => {
     navigate(`/edit-certificate/${id}`);
   };
 

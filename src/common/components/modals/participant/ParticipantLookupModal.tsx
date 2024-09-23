@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/ParticipantLookupModal.css';
+import '../participant/ParticipantLookupModal.css';
 
 interface ParticipantLookupModalProps {
   onAddParticipant: (participants: { name: string; department: string; email: string }[]) => void;

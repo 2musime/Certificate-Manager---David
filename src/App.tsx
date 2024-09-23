@@ -1,15 +1,15 @@
 import React, { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import './styles/App.css';
-import Example1 from './components/Example1';
-import Example2 from './components/Example2';
-import Example3 from './components/Example3';
-import AddCertificate from './components/certificates/AddCertificate';
-import EditCertificate from './components/certificates/EditCertificate';
-import Header from './components/Header';
-import UserSwitcher from './components/UserSwitcher';
-import { useLanguage } from './components/context/LanguageContext';
+import Sidebar from './layout/sidebar/Sidebar';
+import '../src/App.css';
+import Example1 from './pages/example-1/Example1';
+import Example2 from './pages/example-2/Example2';
+import Example3 from './pages/example-3/Example3';
+import AddCertificate from './pages/new-certificate/AddCertificate';
+import EditCertificate from './pages/new-certificate/EditCertificate';
+import Header from './layout/header/Header';
+import UserSwitcher from './common/context/UserSwitcher';
+import { useLanguage } from './common/context/LanguageContext';
 
 const Start: FC = () => {
   const { translations } = useLanguage();
