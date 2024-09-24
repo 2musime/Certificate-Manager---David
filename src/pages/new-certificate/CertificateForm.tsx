@@ -30,7 +30,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
     certificateType: '',
     validFrom: '',
     validTo: '',
-    pdfFile: null as string | null,
+    pdfFile: '',
     pdfPreview: '' as string | null,
   });
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +51,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
             validTo: certificate.validTo ? certificate.validTo : '',
             certificateType: certificate.certificateType,
             supplier: certificate.supplier,
-            pdfFile: certificate.pdfFile || null,
+            pdfFile: certificate.pdfFile || '',
             pdfPreview: certificate.pdfPreview || null
           })
         ));
@@ -102,6 +102,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
     try {
       if (certificateId && isEdit) {
         await updateCertificate({
+          id:certificateId,
           supplier: formData.supplier,
           certificateType: formData.certificateType,
           validFrom: formData.validFrom,
@@ -130,7 +131,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
       certificateType: '',
       validFrom: '',
       validTo: '',
-      pdfFile: null,
+      pdfFile: '',
       pdfPreview: null,
     });
     setError(null); 

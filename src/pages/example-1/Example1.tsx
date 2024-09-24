@@ -12,6 +12,7 @@ interface Certificate {
   certificateType: string;
   validFrom: string;
   validTo: string;
+  pdfFile?: string;
 }
 
 const Example1: React.FC = () => {

@@ -1,3 +1,13 @@
+
+interface Certificate {
+  id: number;
+  supplier: string;
+  certificateType: string;
+  validFrom: string;
+  validTo: string;
+  pdfFile?: string;
+  pdfPreview?: string;
+}
 export const initializeDB = () => {
   return new Promise<IDBDatabase>((resolve, reject) => {
     const request = indexedDB.open('certificate-db', 1);
@@ -25,7 +35,7 @@ export const initializeDB = () => {
 
 export const getCertificates = async () => {
   const db = await initializeDB();
-  return new Promise<any[]>((resolve, reject) => {
+  return new Promise<Certificate[]>((resolve, reject) => {
     const transaction = db.transaction('certificates', 'readonly');
     const store = transaction.objectStore('certificates');
     const request = store.getAll();
@@ -74,7 +84,7 @@ export const addCertificate = async (certificate: { supplier: string; certificat
   });
 };
 
-export const updateCertificate = async (certificate: any, id:number) => {
+export const updateCertificate = async (certificate: Certificate, id:number) => {
   const db = await initializeDB();
   return new Promise<void>((resolve, reject) => {
     const transaction = db.transaction('certificates', 'readwrite');
