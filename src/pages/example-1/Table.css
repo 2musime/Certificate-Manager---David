@@ -1,0 +1,33 @@
+.new-certificate-button{
+  height: 40px;
+  width: 130px;
+  padding: 4px 8px;
+  background-color: #9bd80c;
+  color: white;
+  border: none;
+  margin-bottom: 8px;
+}
+.new-certificate-button:hover{
+  cursor: pointer;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    color: rgb(69, 69, 69);
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  

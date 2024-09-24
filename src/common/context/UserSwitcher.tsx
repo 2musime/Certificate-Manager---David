@@ -1,6 +1,6 @@
 import React from 'react';
-import { useUser } from './context/UserContext';
-import '../styles/UserSwitcher.css';
+import { useUser } from './UserContext';
+import "../context/UserSwitcher.css";
 
 const UserSwitcher: React.FC = () => {
   const { user, setUser } = useUser();

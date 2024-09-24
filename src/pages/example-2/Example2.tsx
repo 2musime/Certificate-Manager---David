@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useLanguage } from './context/LanguageContext';
+import { useLanguage } from '../../common/context/LanguageContext';
 
 const Example2: FC = () => {
   const { translations } = useLanguage();

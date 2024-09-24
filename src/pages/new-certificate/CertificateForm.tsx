@@ -1,19 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { addCertificate, updateCertificate } from "../../DB/indexedDB";
+import { addCertificate, updateCertificate } from "../../common/components/DB/indexedDB";
 import { useNavigate } from 'react-router';
-import "../../styles/NewCertificate.css";
-import Search from '../../icons/search';
-import X from '../../icons/x';
-import { getCertificates } from "../../DB/indexedDB";
-import SupplierLookupModal from '../SupplierLookupModal';
-import ParticipantLookupModal from '../ParticipantLookupModal';
-import { useLanguage } from '../context/LanguageContext';
-import CommentModal from '../CommentModal';
+import '../new-certificate/NewCertificate.css';
+import Search from '../../common/components/icons/search';
+import X from '../../common/components/icons/x';
+import { getCertificates } from "../../common/components/DB/indexedDB";
+import SupplierLookupModal from '../../common/components/modals/supplier/SupplierLookupModal';
+import ParticipantLookupModal from '../../common/components/modals/participant/ParticipantLookupModal';
+import { useLanguage } from '../../common/context/LanguageContext';
+import CommentModal from '../../common/components/modals/comment/CommentModal';
 
 interface ICertificateForm {
   isEdit?: boolean;
   certificateId?: number;
 }
+interface Comment {
+  text: string;
+  user: string;
+}
+
 
 const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: ICertificateForm) => {
   const { translations } = useLanguage();
@@ -31,7 +36,8 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
   const [error, setError] = useState<string | null>(null);
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false);
-  const [comments,setComments]=useState<any[]>([])
+  const [comments, setComments] = useState<Comment[]>([]);
+
   const [participants, setParticipants] = useState<{ name: string; department: string; email: string }[]>([]);
   const [openComment,setOpenComment]=useState(false)
   useEffect(() => {

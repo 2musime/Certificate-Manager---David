@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useUser } from './context/UserContext';
-import '../styles/CommentModal.css';
+import { useUser } from '../../../context/UserContext';
+import "../comment/CommentModal.css";
 
 interface CommentModalProps {
   onAddComment: (comment: { text: string; user: string }) => void;

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
-import '../styles/SupplierLookupModal.css';
-import useTranslation from './context/useTranslation';
+import '../supplier/SupplierLookupModal.css';
+import useTranslation from '../../../context/useTranslation';
 
 interface SupplierLookupModalProps {
   onClose: () => void;
