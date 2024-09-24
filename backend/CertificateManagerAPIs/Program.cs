@@ -1,5 +1,6 @@
-using CertificateManagerAPIs.Models;
+global using CertificateManagerAPIs.Data;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

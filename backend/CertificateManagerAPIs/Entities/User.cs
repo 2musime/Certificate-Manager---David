@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CertificateManagerAPIs.Models;
+﻿namespace CertificateManagerAPIs.Entities;
 
 public partial class User
 {
