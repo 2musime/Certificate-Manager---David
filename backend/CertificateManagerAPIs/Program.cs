@@ -1,17 +1,16 @@
 global using CertificateManagerAPIs.Data;
-using Microsoft.EntityFrameworkCore;
-
+using CertificateManagerAPIs.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<CertificatedbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CertificateDbConnection")));
+builder.Services.ConfigureSqlContext(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
