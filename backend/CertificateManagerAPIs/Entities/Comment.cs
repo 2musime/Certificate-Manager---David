@@ -1,4 +1,7 @@
-﻿namespace CertificateManagerAPIs.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace CertificateManagerAPIs.Entities;
 
 public partial class Comment
 {
@@ -8,7 +11,7 @@ public partial class Comment
 
     public int UserId { get; set; }
 
-    public string Comment1 { get; set; } = null!;
+    public string UserComment { get; set; } = null!;
 
     public DateTime? CreatedAt { get; set; }
 

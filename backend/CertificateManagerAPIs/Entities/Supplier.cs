@@ -1,4 +1,7 @@
-﻿namespace CertificateManagerAPIs.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace CertificateManagerAPIs.Entities;
 
 public partial class Supplier
 {
@@ -9,6 +12,8 @@ public partial class Supplier
     public int? SupplierIndex { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public string City { get; set; } = null!;
 
     public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
 }

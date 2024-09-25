@@ -1,4 +1,6 @@
-﻿using CertificateManagerAPIs.Entities;
+﻿using System;
+using System.Collections.Generic;
+using CertificateManagerAPIs.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CertificateManagerAPIs.Data;
@@ -57,12 +59,10 @@ public partial class CertificatedbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Comments__3214EC07CAEBDE0B");
 
-            entity.Property(e => e.Comment1)
-                .HasMaxLength(255)
-                .HasColumnName("Comment");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.UserComment).HasMaxLength(255);
 
             entity.HasOne(d => d.Certificate).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.CertificateId)
@@ -79,6 +79,7 @@ public partial class CertificatedbContext : DbContext
         {
             entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B4F018FC1E");
 
+            entity.Property(e => e.City).HasMaxLength(100);
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -93,6 +94,7 @@ public partial class CertificatedbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Department).HasMaxLength(100);
+            entity.Property(e => e.Email).HasMaxLength(255);
             entity.Property(e => e.FirstName).HasMaxLength(100);
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Plant).HasMaxLength(100);
