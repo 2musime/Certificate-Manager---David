@@ -1,4 +1,7 @@
-﻿namespace CertificateManagerAPIs.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace CertificateManagerAPIs.Entities;
 
 public partial class User
 {
@@ -13,6 +16,8 @@ public partial class User
     public string? Plant { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public string Email { get; set; } = null!;
 
     public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
 

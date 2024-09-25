@@ -1,4 +1,7 @@
-﻿namespace CertificateManagerAPIs.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace CertificateManagerAPIs.Entities;
 
 public partial class Certificate
 {
