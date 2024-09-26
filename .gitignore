@@ -253,6 +253,7 @@ src/.vs/config/applicationhost.config
 .idea/
 
 # AppSetting.json
-appsettings.Development.json
 
+appsettings.Development.json
+appsettings.json
 
