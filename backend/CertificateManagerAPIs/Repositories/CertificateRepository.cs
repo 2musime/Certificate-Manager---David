@@ -1,0 +1,54 @@
+﻿using CertificateManagerAPIs.Data;
+using CertificateManagerAPIs.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace CertificateManagerAPIs.Repositories
+{
+    public class CertificateRepository : ICertificateRepository
+    {
+        private readonly CertificatedbContext _context;
+
+        public CertificateRepository(CertificatedbContext context)
+        {
+            _context = context;
+        }
+        public async Task<IEnumerable<Certificate>> GetCertificatesAsync()
+        {
+            return await _context.Certificates
+                                 .Where(c => c.DeletedAt == null)
+                                 .Include(c => c.Supplier)
+                                 .ToListAsync();
+        }
+
+        public async Task<Certificate?> GetCertificateByIdAsync(int id)
+        {
+            return await _context.Certificates
+                                 .Include(c => c.Supplier)
+                                 .FirstOrDefaultAsync(c => c.Id == id && c.DeletedAt == null);
+        }
+
+        public async Task AddCertificateAsync(Certificate certificate)
+        {
+            await _context.Certificates.AddAsync(certificate);
+        }
+
+        public async Task UpdateCertificateAsync(Certificate certificate)
+        {
+            _context.Certificates.Update(certificate);
+        }
+
+        public async Task DeleteCertificateAsync(int id)
+        {
+            var certificate = await GetCertificateByIdAsync(id);
+            if (certificate != null)
+            {
+                certificate.DeletedAt = DateTime.UtcNow;
+            }
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync()) > 0;
+        }
+    }
+}

@@ -1,0 +1,5 @@
+﻿@CertificateManagerAPIs_HostAddress = https://localhost:7164
+
+GET {{CertificateManagerAPIs_HostAddress}}/api/certificate
+
+###
