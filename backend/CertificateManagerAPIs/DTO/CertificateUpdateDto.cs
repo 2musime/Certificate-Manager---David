@@ -8,6 +8,7 @@
         public string PdfFile { get; set; } = null!;
         public int? UserAssigned { get; set; }
         public int SupplierId { get; set; }
+        public CommentDto? Comments { get; set; }
+        public UserDto? User { get; set; }
     }
-
 }

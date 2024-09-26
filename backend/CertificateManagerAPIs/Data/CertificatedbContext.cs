@@ -1,4 +1,6 @@
-﻿using CertificateManagerAPIs.Entities;
+﻿using System;
+using System.Collections.Generic;
+using CertificateManagerAPIs.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CertificateManagerAPIs.Data;
@@ -14,6 +16,8 @@ public partial class CertificatedbContext : DbContext
     {
     }
 
+    public virtual DbSet<AssignedUser> AssignedUsers { get; set; }
+
     public virtual DbSet<Certificate> Certificates { get; set; }
 
     public virtual DbSet<Comment> Comments { get; set; }
@@ -22,8 +26,28 @@ public partial class CertificatedbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer("Name=CertificateDbConnection");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AssignedUser>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.AssignedAt).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Certificate).WithMany()
+                .HasForeignKey(d => d.CertificateId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__AssignedU__Certi__5BE2A6F2");
+
+            entity.HasOne(d => d.User).WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__AssignedU__UserI__5CD6CB2B");
+        });
+
         modelBuilder.Entity<Certificate>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Certific__3214EC07B3AEB592");
