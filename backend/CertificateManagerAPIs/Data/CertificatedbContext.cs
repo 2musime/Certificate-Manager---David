@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CertificateManagerAPIs.Entities;
+﻿using CertificateManagerAPIs.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CertificateManagerAPIs.Data;
@@ -23,9 +21,6 @@ public partial class CertificatedbContext : DbContext
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=CertificateDbConnection");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
