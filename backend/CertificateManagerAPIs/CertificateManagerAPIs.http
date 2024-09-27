@@ -1,6 +1,0 @@
-@CertificateManagerAPIs_HostAddress = http://localhost:5115
-
-GET {{CertificateManagerAPIs_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
