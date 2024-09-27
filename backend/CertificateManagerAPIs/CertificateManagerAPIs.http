@@ -3,3 +3,52 @@
 GET {{CertificateManagerAPIs_HostAddress}}/api/certificate
 
 ###
+
+GET {{CertificateManagerAPIs_HostAddress}}/api/certificate
+
+###
+
+DELETE {{CertificateManagerAPIs_HostAddress}}/api/certificate/4
+
+###
+
+GET {{CertificateManagerAPIs_HostAddress}}/api/certificate
+
+###
+
+POST {{CertificateManagerAPIs_HostAddress}}/api/certificate
+Content-Type: application/json
+
+  {
+  "type": "Completion",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "Type": [
+      "The Type field is required."
+    ],
+    "PdfFile": [
+      "The PdfFile field is required."
+    ],
+    "Supplier": [
+      "The Supplier field is required."
+    ]
+  },
+  "traceId": "00-466d207a303af7fc7be43e2a144f64ac-340463c8d74c7648-00"
+}
+
+
+###
+
+GET {{CertificateManagerAPIs_HostAddress}}/api/certificate/11
+
+###
+
+POST {{CertificateManagerAPIs_HostAddress}}/api/certificate
+Content-Type: application/json
+
+{
+  /
+}
+
+###

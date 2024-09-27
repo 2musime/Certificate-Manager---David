@@ -14,16 +14,22 @@ namespace CertificateManagerAPIs.Services
         public async Task<IEnumerable<CertificateDto>> GetAllCertificatesAsync()
         {
             var certificates = await _certificateRepository.GetCertificatesAsync();
+
             return certificates.Select(c => new CertificateDto
             {
-                Id = c.Id,
+                Supplier = new SupplierDto
+                {
+                    SupplierName = c.Supplier.SupplierName,
+                    SupplierId = c.Supplier.SupplierId,
+                    SupplierIndex = c.Supplier.SupplierIndex,
+                    City = c.Supplier.City
+
+                },
+
                 Type = c.Type,
                 ValidFrom = c.ValidFrom,
                 ValidTo = c.ValidTo,
-                Supplier = new SupplierDto
-                {
-                    SupplierName = c.Supplier.SupplierName
-                }
+                Id = c.Id
             });
         }
 
@@ -34,14 +40,14 @@ namespace CertificateManagerAPIs.Services
 
             return new CertificateDto
             {
-                Id = certificate.Id,
-                Type = certificate.Type,
-                ValidFrom = certificate.ValidFrom,
-                ValidTo = certificate.ValidTo,
                 Supplier = new SupplierDto
                 {
-                    SupplierName = certificate.Supplier.SupplierName
-                }
+                    SupplierName = certificate.Supplier.SupplierName,
+                    SupplierId = certificate.Supplier.SupplierId
+                },
+                Type = certificate.Type,
+                ValidFrom = certificate.ValidFrom,
+                ValidTo = certificate.ValidTo
             };
         }
 
