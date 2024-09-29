@@ -19,25 +19,24 @@ namespace CertificateManagerAPIs.Repositories
                                  .Include(c => c.Supplier)
                                  .ToListAsync();
         }
-
         public async Task<Certificate?> GetCertificateByIdAsync(int id)
         {
             return await _context.Certificates
+                .Where(c => c.DeletedAt == null)
                 .Include(c => c.Supplier)
                 .Include(c => c.Comments)
                 .Include(c => c.AssignedUsers)
                     .ThenInclude(au => au.User)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
-
         public async Task AddCertificateAsync(Certificate certificate)
         {
             await _context.Certificates.AddAsync(certificate);
         }
-
         public async Task UpdateCertificateAsync(Certificate certificate)
         {
             _context.Certificates.Update(certificate);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteCertificateAsync(int id)
