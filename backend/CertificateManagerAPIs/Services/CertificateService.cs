@@ -33,24 +33,46 @@ namespace CertificateManagerAPIs.Services
             });
         }
 
-        public async Task<CertificateDto?> GetCertificateByIdAsync(int id)
+
+        public async Task<CertificateByIdDto?> GetCertificateByIdAsync(int id)
         {
             var certificate = await _certificateRepository.GetCertificateByIdAsync(id);
             if (certificate == null) return null;
 
-            return new CertificateDto
+            return new CertificateByIdDto
             {
                 Supplier = new SupplierDto
                 {
                     SupplierName = certificate.Supplier.SupplierName,
-                    SupplierId = certificate.Supplier.SupplierId
+                    SupplierId = certificate.Supplier.SupplierId,
+                    SupplierIndex = certificate.Supplier.SupplierIndex,
+                    City = certificate.Supplier.City
                 },
                 Type = certificate.Type,
                 ValidFrom = certificate.ValidFrom,
-                ValidTo = certificate.ValidTo
+                ValidTo = certificate.ValidTo,
+                PdfFile = certificate.PdfFile,
+                Id = certificate.Id,
+                Comments = certificate.Comments?.Select(c => new CommentDto
+                {
+                    Id = c.Id,
+                    CertificateId = c.CertificateId,
+                    UserId = c.UserId,
+                    UserComment = c.UserComment
+                }).ToList(),
+                UserAssignedNavigation = certificate.AssignedUsers?.Select(au => new AssignedUserDto
+                {
+                    CertificateId = au.CertificateId,
+                    UserId = au.UserId,
+                    User = au.User != null ? new UserDto
+                    {
+                        Name = au.User.Name,
+                        Email = au.User.Email,
+                        Department = au.User.Department
+                    } : null
+                }).ToList()
             };
         }
-
         public async Task CreateCertificateAsync(CertificateCreateDto dto)
         {
             var certificate = new Certificate
