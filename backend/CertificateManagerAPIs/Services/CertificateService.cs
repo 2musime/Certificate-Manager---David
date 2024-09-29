@@ -107,7 +107,6 @@ namespace CertificateManagerAPIs.Services
                     });
                 }
             }
-
             await _certificateRepository.AddCertificateAsync(certificate);
             await _certificateRepository.SaveChangesAsync();
         }
@@ -115,7 +114,6 @@ namespace CertificateManagerAPIs.Services
         {
             var certificate = await _certificateRepository.GetCertificateByIdAsync(id);
             if (certificate == null) throw new Exception("Certificate not found");
-
             certificate.Type = dto.Type;
             certificate.ValidFrom = dto.ValidFrom;
             certificate.ValidTo = dto.ValidTo;
@@ -123,6 +121,30 @@ namespace CertificateManagerAPIs.Services
             certificate.UserAssigned = dto.UserAssigned;
             certificate.SupplierId = dto.SupplierId;
 
+            if (dto.NewComments != null && dto.NewComments.Any())
+            {
+                foreach (var commentDto in dto.NewComments)
+                {
+                    var newComment = new Comment
+                    {
+                        UserId = commentDto.UserId,
+                        UserComment = commentDto.UserComment
+                    };
+                    certificate.Comments.Add(newComment);
+                }
+            }
+            if (dto.AssignedUserIds != null && dto.AssignedUserIds.Any())
+            {
+                foreach (var userId in dto.AssignedUserIds)
+                {
+                    var newAssignedUser = new AssignedUser
+                    {
+                        UserId = userId,
+                        Certificate = certificate
+                    };
+                    certificate.AssignedUsers.Add(newAssignedUser);
+                }
+            }
             await _certificateRepository.UpdateCertificateAsync(certificate);
             await _certificateRepository.SaveChangesAsync();
         }
