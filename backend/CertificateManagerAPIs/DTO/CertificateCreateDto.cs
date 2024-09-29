@@ -1,4 +1,5 @@
-﻿namespace CertificateManagerAPIs.DTO
+﻿
+namespace CertificateManagerAPIs.DTO
 {
     public class CertificateCreateDto
     {
@@ -7,7 +8,7 @@
         public DateTime ValidFrom { get; set; }
         public DateTime ValidTo { get; set; }
         public string PdfFile { get; set; } = null!;
-        public int SupplierId { get; set; }
+        public int? UserAssigned { get; set; }
         public List<int>? AssignedUserIds { get; set; }
         public List<CommentDto>? Comments { get; set; }
     }

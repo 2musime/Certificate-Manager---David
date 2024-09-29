@@ -81,13 +81,36 @@ namespace CertificateManagerAPIs.Services
                 ValidFrom = dto.ValidFrom,
                 ValidTo = dto.ValidTo,
                 PdfFile = dto.PdfFile,
-                SupplierId = dto.SupplierId
+                SupplierId = dto.Supplier.SupplierId,
+                AssignedUsers = new List<AssignedUser>(),
+                Comments = new List<Comment>()
             };
+            if (dto.AssignedUserIds != null)
+            {
+                foreach (var userId in dto.AssignedUserIds)
+                {
+                    certificate.AssignedUsers.Add(new AssignedUser
+                    {
+                        UserId = userId,
+                        Certificate = certificate
+                    });
+                }
+            }
+            if (dto.Comments != null)
+            {
+                foreach (var commentDto in dto.Comments)
+                {
+                    certificate.Comments.Add(new Comment
+                    {
+                        UserId = commentDto.UserId,
+                        UserComment = commentDto.UserComment
+                    });
+                }
+            }
 
             await _certificateRepository.AddCertificateAsync(certificate);
             await _certificateRepository.SaveChangesAsync();
         }
-
         public async Task UpdateCertificateAsync(int id, CertificateUpdateDto dto)
         {
             var certificate = await _certificateRepository.GetCertificateByIdAsync(id);
