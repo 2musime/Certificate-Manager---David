@@ -13,7 +13,8 @@ namespace CertificateManagerAPIs.Controllers
         {
             _userService = userService;
         }
-        [HttpGet("All Participants")]
+
+        [HttpGet("Participants")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUserAsync()
         {
             var users = await _userService.GetAllUserAsync();
@@ -39,6 +40,7 @@ namespace CertificateManagerAPIs.Controllers
             var user = await _userService.SearchUsersByUserIdAsync(userId);
             return Ok(user);
         }
+
         [HttpGet("Plant")]
         public async Task<IActionResult> SearchUsersByPlantAsync(string plant)
         {
