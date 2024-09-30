@@ -25,6 +25,8 @@ public partial class Certificate
 
     public int SupplierId { get; set; }
 
+    public virtual ICollection<AssignedUser> AssignedUsers { get; set; } = new List<AssignedUser>();
+
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual Supplier Supplier { get; set; } = null!;

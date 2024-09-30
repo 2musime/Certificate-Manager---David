@@ -255,5 +255,6 @@ src/.vs/config/applicationhost.config
 # AppSetting.json
 
 appsettings.Development.json
-appsettings.json
 
+# Http file Endipoint explorer
+CertificateManagerAPIs.http
