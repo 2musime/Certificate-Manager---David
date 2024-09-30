@@ -11,12 +11,10 @@ namespace CertificateManagerAPIs.Services
         {
             _userRepository = userRepository;
         }
-
         public async Task<IEnumerable<User>> GetAllUserAsync()
         {
             return await _userRepository.GetAllUserAsync();
         }
-
         public async Task<IEnumerable<UserDto>> SearchUsersByNameAsync(string userName)
         {
             var user = await _userRepository.SearchUsersByNameAsync(userName);
@@ -30,7 +28,6 @@ namespace CertificateManagerAPIs.Services
                 Email = s.Email
             }).ToList();
         }
-
         public async Task<IEnumerable<UserDto>> SearchUsersByFirstNameAsync(string firstName)
         {
             var user = await _userRepository.SearchUsersByFirstNameAsync(firstName);
@@ -44,7 +41,6 @@ namespace CertificateManagerAPIs.Services
                 Email = s.Email
             }).ToList();
         }
-
         public async Task<IEnumerable<UserDto>> SearchUsersByUserIdAsync(int userId)
         {
             var user = await _userRepository.SearchUsersByUserIdAsync(userId);
@@ -58,7 +54,6 @@ namespace CertificateManagerAPIs.Services
                 Email = s.Email
             }).ToList();
         }
-
         public async Task<IEnumerable<UserDto>> SearchUsersByPlantAsync(string plant)
         {
             var user = await _userRepository.SearchUsersByPlantAsync(plant);
