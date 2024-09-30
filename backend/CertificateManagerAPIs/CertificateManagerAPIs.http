@@ -4,51 +4,86 @@ GET {{CertificateManagerAPIs_HostAddress}}/api/certificate
 
 ###
 
-GET {{CertificateManagerAPIs_HostAddress}}/api/certificate
-
-###
-
-DELETE {{CertificateManagerAPIs_HostAddress}}/api/certificate/4
-
-###
-
-GET {{CertificateManagerAPIs_HostAddress}}/api/certificate
+GET {{CertificateManagerAPIs_HostAddress}}/api/certificate/15
 
 ###
 
 POST {{CertificateManagerAPIs_HostAddress}}/api/certificate
 Content-Type: application/json
-
-  {
-  "type": "Completion",
-  "title": "One or more validation errors occurred.",
-  "status": 400,
-  "errors": {
-    "Type": [
-      "The Type field is required."
-    ],
-    "PdfFile": [
-      "The PdfFile field is required."
-    ],
-    "Supplier": [
-      "The Supplier field is required."
-    ]
+{
+  "supplier": {
+    "supplierId": 1,
+    "supplierName": "string",
+    "supplierIndex": 0,
+    "city": "string"
   },
-  "traceId": "00-466d207a303af7fc7be43e2a144f64ac-340463c8d74c7648-00"
+  "type": "Testing version 2",
+  "validFrom": "2024-09-30",
+  "validTo": "2025-09-30",
+  "pdfFile": "document/test1.pdf",
+  "userAssigned": 4,
+  "assignedUserIds": [
+    2,
+3
+  ],
+  "comments": [
+    {
+      "id": 0,
+      "certificateId": 0,
+      "userId": 4,
+      "userComment": "Tesing version 2"
+    }
+  ]
+,
+  "comments": [
+    {
+      "id": 0,
+      "certificateId": 0,
+      "userId": 3,
+      "userComment": "Number 3"
+    }
+  ]
 }
 
+###
+
+GET {{CertificateManagerAPIs_HostAddress}}/api/certificate/19
 
 ###
 
-GET {{CertificateManagerAPIs_HostAddress}}/api/certificate/11
+DELETE {{CertificateManagerAPIs_HostAddress}}/api/certificate/20
 
 ###
 
-POST {{CertificateManagerAPIs_HostAddress}}/api/certificate
+PUT {{CertificateManagerAPIs_HostAddress}}/api/certificate/0
 Content-Type: application/json
 
 {
-  /
+  "supplierId": 3,
+  "type": "Update test",
+  "validFrom": "2024-09-30",
+  "validTo": "2026-09-30",
+  "pdfFile": "doc/PUT.pdf",
+  "userAssigned": 6,
+  "newComments": [
+    {
+      "id": 0,
+      "certificateId": 19,
+      "userId": 6,
+      "userComment": "I hope it works"
+    }
+  ],
+  "assignedUserIds": [
+    6
+  ]
 }
+
+###
+
+GET {{CertificateManagerAPIs_HostAddress}}/api/supplier
+
+###
+
+GET {{CertificateManagerAPIs_HostAddress}}/api/supplier/Search-supplier/1
 
 ###
