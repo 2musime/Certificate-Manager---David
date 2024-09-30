@@ -10,6 +10,7 @@ public class SupplierService : ISupplierService
     {
         _supplierRepository = supplierRepository;
     }
+
     public async Task<IEnumerable<Supplier>> GetSuppliersAsync()
     {
         return await _supplierRepository.GetSuppliersAsync();

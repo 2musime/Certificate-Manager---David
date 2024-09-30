@@ -15,18 +15,21 @@ namespace CertificateManagerAPIs.Controllers
         {
             _supplierService = supplierService;
         }
+
         [HttpGet("Suppliers")]
         public async Task<ActionResult<IEnumerable<SupplierDto>>> GetSuppliersAsync()
         {
             var suppliers = await _supplierService.GetSuppliersAsync();
             return Ok(suppliers);
         }
+
         [HttpGet("SearchByName")]
         public async Task<IActionResult> SearchByName(string supplierName)
         {
             var suppliers = await _supplierService.SearchSuppliersByNameAsync(supplierName);
             return Ok(suppliers);
         }
+
         // Search by Supplier Index
         [HttpGet("SearchByIndex")]
         public async Task<IActionResult> SearchByIndex(int supplierIndex)
@@ -34,6 +37,7 @@ namespace CertificateManagerAPIs.Controllers
             var suppliers = await _supplierService.SearchSuppliersByIndexAsync(supplierIndex);
             return Ok(suppliers);
         }
+
         // Search by City
         [HttpGet("SearchByCity")]
         public async Task<IActionResult> SearchByCity(string city)
