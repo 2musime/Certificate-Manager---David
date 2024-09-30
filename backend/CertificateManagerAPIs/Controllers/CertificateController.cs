@@ -9,7 +9,6 @@ namespace CertificateManagerAPIs.Controllers
     public class CertificateController : ControllerBase
     {
         private readonly ICertificateService _certificateService;
-
         public CertificateController(ICertificateService certificateService)
         {
             _certificateService = certificateService;

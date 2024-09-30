@@ -7,11 +7,11 @@ namespace CertificateManagerAPIs.Repositories
     public class CertificateRepository : ICertificateRepository
     {
         private readonly CertificatedbContext _context;
-
         public CertificateRepository(CertificatedbContext context)
         {
             _context = context;
         }
+
         public async Task<IEnumerable<Certificate>> GetCertificatesAsync()
         {
             return await _context.Certificates
@@ -19,6 +19,7 @@ namespace CertificateManagerAPIs.Repositories
                                  .Include(c => c.Supplier)
                                  .ToListAsync();
         }
+
         public async Task<Certificate?> GetCertificateByIdAsync(int id)
         {
             return await _context.Certificates
@@ -29,6 +30,7 @@ namespace CertificateManagerAPIs.Repositories
                     .ThenInclude(au => au.User)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
+
         public async Task AddCertificateAsync(Certificate certificate)
         {
             await _context.Certificates.AddAsync(certificate);

@@ -6,7 +6,6 @@ namespace CertificateManagerAPIs.Services
     public class CertificateService : ICertificateService
     {
         private readonly ICertificateRepository _certificateRepository;
-
         public CertificateService(ICertificateRepository certificateRepository)
         {
             _certificateRepository = certificateRepository;
@@ -23,17 +22,13 @@ namespace CertificateManagerAPIs.Services
                     SupplierId = c.Supplier.SupplierId,
                     SupplierIndex = c.Supplier.SupplierIndex,
                     City = c.Supplier.City
-
                 },
-
                 Type = c.Type,
                 ValidFrom = c.ValidFrom,
                 ValidTo = c.ValidTo,
                 Id = c.Id
             });
         }
-
-
         public async Task<CertificateByIdDto?> GetCertificateByIdAsync(int id)
         {
             var certificate = await _certificateRepository.GetCertificateByIdAsync(id);
@@ -73,6 +68,7 @@ namespace CertificateManagerAPIs.Services
                 }).ToList()
             };
         }
+
         public async Task CreateCertificateAsync(CertificateCreateDto dto)
         {
             var certificate = new Certificate
@@ -110,6 +106,7 @@ namespace CertificateManagerAPIs.Services
             await _certificateRepository.AddCertificateAsync(certificate);
             await _certificateRepository.SaveChangesAsync();
         }
+
         public async Task UpdateCertificateAsync(int id, CertificateUpdateDto dto)
         {
             var certificate = await _certificateRepository.GetCertificateByIdAsync(id);
