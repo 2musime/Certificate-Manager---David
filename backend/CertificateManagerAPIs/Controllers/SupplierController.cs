@@ -15,8 +15,7 @@ namespace CertificateManagerAPIs.Controllers
         {
             _supplierService = supplierService;
         }
-
-        [HttpGet("All suppliers")]
+        [HttpGet("Suppliers")]
         public async Task<ActionResult<IEnumerable<SupplierDto>>> GetSuppliersAsync()
         {
             var suppliers = await _supplierService.GetSuppliersAsync();
