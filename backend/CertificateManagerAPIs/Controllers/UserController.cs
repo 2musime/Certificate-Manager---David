@@ -20,7 +20,6 @@ namespace CertificateManagerAPIs.Controllers
             var users = await _userService.GetAllUserAsync();
             return Ok(users);
         }
-
         [HttpGet("Name")]
         public async Task<IActionResult> SearchUsersByNameAsync(string userName)
         {
