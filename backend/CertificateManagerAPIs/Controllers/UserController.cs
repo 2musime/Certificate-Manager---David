@@ -13,14 +13,12 @@ namespace CertificateManagerAPIs.Controllers
         {
             _userService = userService;
         }
-
         [HttpGet("All Participants")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUserAsync()
         {
             var users = await _userService.GetAllUserAsync();
             return Ok(users);
         }
-
         [HttpGet("Name")]
         public async Task<IActionResult> SearchUsersByNameAsync(string userName)
         {
