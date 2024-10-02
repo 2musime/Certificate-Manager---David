@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../context/UserSwitcher.css';
 import { useUser } from './UserContext';
 
 const UserSwitcher: React.FC = () => {
