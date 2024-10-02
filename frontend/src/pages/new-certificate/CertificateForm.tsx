@@ -144,7 +144,11 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
     });
     setIsSupplierModalOpen(false);
   };
-
+  const handleDeleteParticipant = (email: string) => {
+    setParticipants(prevParticipants =>
+      prevParticipants.filter(participant => participant.email !== email)
+    );
+  };
   const handleAddParticipant = (selectedParticipants: { name: string; department: string; email: string }[]) => {
     const _participants = participants
 
@@ -239,6 +243,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
             <table className="participant-table">
               <thead>
                 <tr>
+                  <th></th>
                   <th>{translations['name']}</th>
                   <th>{translations['department']}</th>
                   <th>{translations['email']}</th>
@@ -247,9 +252,14 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
               <tbody>
                 {participants.map((participant, index) => (
                   <tr key={index}>
-                    <td>{participant.name}</td>
-                    <td>{participant.department}</td>
-                    <td>{participant.email}</td>
+                    <td>
+                    <button type='button' onClick={() => handleDeleteParticipant(participant.email)}>
+                      <X className="icon" />
+                    </button>
+                  </td>
+                  <td>{participant.name}</td>
+                  <td>{participant.department}</td>
+                  <td>{participant.email}</td>
                   </tr>
                 ))}
               </tbody>

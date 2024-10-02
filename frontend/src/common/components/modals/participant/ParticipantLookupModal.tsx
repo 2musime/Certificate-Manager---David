@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../participant/ParticipantLookupModal.css';
 
 interface ParticipantLookupModalProps {
@@ -6,7 +6,7 @@ interface ParticipantLookupModalProps {
   onClose: () => void;
 }
 
-interface IParticipant {
+interface Participant {
   name: string;
   firstName: string;
   userId: string;
@@ -19,31 +19,36 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
   const [nameSearchTerm, setNameSearchTerm] = useState('');
   const [firstNameSearchTerm, setFirstNameSearchTerm] = useState('');
   const [userIdSearchTerm, setUserIdSearchTerm] = useState('');
-  const [departmentSearchTerm, setDepartmentSearchTerm] = useState('ITM');
+  const [departmentSearchTerm, setDepartmentSearchTerm] = useState('');
   const [plantSearchTerm, setPlantSearchTerm] = useState('');
-  const [selectedParticipants, setSelectedParticipants] = useState<IParticipant[]>([]);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
 
-  const participants: IParticipant[] = [
-    { name: 'Simon', firstName: 'John', userId: '123', department: 'ITM', plant: 'Plant1', email: 'john.doe@example.com' },
-    { name: 'Wolfgang', firstName: 'Jane', userId: '456', department: 'ITM', plant: 'Plant2', email: 'jane.smith@example.com' },
-     { name: 'Taylor', firstName: 'Emily', userId: '112', department: 'ITM', plant: 'Plant5', email: 'emily.taylor@example.com' },
-  ];
+  const apiUrl = `https://localhost:7164/api/controller/Participants`;
 
-  const filteredParticipants = participants.filter(participant => {
-    return (
-      participant.name.toLowerCase().includes(nameSearchTerm.toLowerCase()) &&
-      participant.firstName.toLowerCase().includes(firstNameSearchTerm.toLowerCase()) &&
-      participant.userId.toLowerCase().includes(userIdSearchTerm.toLowerCase()) &&
-      participant.department.toLowerCase().includes(departmentSearchTerm.toLowerCase()) &&
-      participant.plant.toLowerCase().includes(plantSearchTerm.toLowerCase())
-    );
-  });
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      setParticipants(data);
+    };
+
+    fetchParticipants();
+  }, []);
+
+  const fetchParticipantByName = async (name: string) => {
+    const params = new URLSearchParams({ participantName: name });
+    const res = await fetch(`https://localhost:7164/api/controller/Participants?${params}`);
+    const data = await res.json();
+    setParticipants(data);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     switch (name) {
       case 'name':
         setNameSearchTerm(value);
+        fetchParticipantByName(value);
         break;
       case 'firstName':
         setFirstNameSearchTerm(value);
@@ -66,12 +71,12 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
     setNameSearchTerm('');
     setFirstNameSearchTerm('');
     setUserIdSearchTerm('');
-    setDepartmentSearchTerm('ITM');
+    setDepartmentSearchTerm('');
     setPlantSearchTerm('');
   };
 
-  const handleParticipantSelection = (participant: IParticipant) => {
-    const isSelected = selectedParticipants.find(p => p.userId === participant.userId);
+  const handleParticipantSelection = (participant: Participant) => {
+    const isSelected = selectedParticipants.find((p: Participant) => p.userId === participant.userId);
     if (isSelected) {
       setSelectedParticipants(prevSelected =>
         prevSelected.filter(p => p.userId !== participant.userId)
@@ -136,7 +141,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
               <label htmlFor="department">Department</label>
               <input
                 type="text"
-                id="department" readOnly
+                id="department"
                 name="department"
                 value={departmentSearchTerm}
                 onChange={handleSearchChange}
@@ -177,7 +182,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
               </tr>
             </thead>
             <tbody>
-              {filteredParticipants.map((participant, index) => (
+              {participants?.map((participant, index) => (
                 <tr key={index}>
                   <td>
                     <input
