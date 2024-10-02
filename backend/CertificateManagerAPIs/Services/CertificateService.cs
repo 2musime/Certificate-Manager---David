@@ -77,7 +77,7 @@ namespace CertificateManagerAPIs.Services
                 ValidFrom = dto.ValidFrom,
                 ValidTo = dto.ValidTo,
                 PdfFile = dto.PdfFile,
-                SupplierId = dto.Supplier.SupplierId,
+                SupplierId = dto.SupplierId,
                 AssignedUsers = new List<AssignedUser>(),
                 Comments = new List<Comment>()
             };

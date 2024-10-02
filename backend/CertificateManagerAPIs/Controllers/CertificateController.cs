@@ -36,7 +36,7 @@ namespace CertificateManagerAPIs.Controllers
         public async Task<ActionResult> CreateCertificate([FromBody] CertificateCreateDto dto)
         {
             await _certificateService.CreateCertificateAsync(dto);
-            return CreatedAtAction(nameof(GetCertificate), new { id = dto.Supplier }, dto);
+            return CreatedAtAction(nameof(GetCertificate), new { id = dto.SupplierId }, dto);
         }
 
         // PUT: api/Certificate/5

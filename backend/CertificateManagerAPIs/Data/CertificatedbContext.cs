@@ -28,7 +28,7 @@ public partial class CertificatedbContext : DbContext
     {
         modelBuilder.Entity<AssignedUser>(entity =>
         {
-            entity.HasKey(e => new { e.CertificateId, e.UserId }).HasName("PK__Assigned__6A802B05611DD3EF");
+            entity.HasKey(e => new { e.CertificateId, e.UserId }).HasName("PK__Assigned__6A802B056CAA4AEE");
 
             entity.Property(e => e.AssignedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -37,17 +37,17 @@ public partial class CertificatedbContext : DbContext
             entity.HasOne(d => d.Certificate).WithMany(p => p.AssignedUsers)
                 .HasForeignKey(d => d.CertificateId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__AssignedU__Certi__693CA210");
+                .HasConstraintName("FK__AssignedU__Certi__44FF419A");
 
             entity.HasOne(d => d.User).WithMany(p => p.AssignedUsers)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__AssignedU__UserI__6A30C649");
+                .HasConstraintName("FK__AssignedU__UserI__45F365D3");
         });
 
         modelBuilder.Entity<Certificate>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Certific__3214EC07B3AEB592");
+            entity.HasKey(e => e.Id).HasName("PK__Certific__3214EC07EE6CF32C");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -56,7 +56,6 @@ public partial class CertificatedbContext : DbContext
             entity.Property(e => e.ModifiedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.PdfFile).HasMaxLength(255);
             entity.Property(e => e.Type).HasMaxLength(100);
             entity.Property(e => e.ValidFrom).HasColumnType("datetime");
             entity.Property(e => e.ValidTo).HasColumnType("datetime");
@@ -73,7 +72,7 @@ public partial class CertificatedbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Comments__3214EC07CAEBDE0B");
+            entity.HasKey(e => e.Id).HasName("PK__Comments__3214EC072D880755");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -93,7 +92,7 @@ public partial class CertificatedbContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B4F018FC1E");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE666B40BDEC0C8");
 
             entity.Property(e => e.City).HasMaxLength(100);
             entity.Property(e => e.CreatedAt)
@@ -104,7 +103,7 @@ public partial class CertificatedbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CFDF0C1E4");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C80E97044");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
