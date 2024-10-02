@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import '../supplier/SupplierLookupModal.css';
 import useTranslation from '../../../context/useTranslation';
 
@@ -6,38 +6,68 @@ interface SupplierLookupModalProps {
   onClose: () => void;
   onSelectSupplier: (name: string) => void;
 }
+interface Supplier {
+  supplierName: string;
+  supplierIndex: string;
+  city: string;
+}
 
 const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSupplier }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [indexSearchTerm, setIndexSearchTerm] = useState('');
   const [citySearchTerm, setCitySearchTerm] = useState('');
   const translate = useTranslation();
+  
 
-  const suppliers = [
-    { name: 'ANDEMIS GmbH', index: '1', city: 'Stuttgart' },
-    { name: 'Strutgut', index: '2', city: 'Berlin' },
-    { name: 'Munich', index: '3', city: 'Munich' },
-  ];
+  const [suppliers, setsuppliers] = useState<Supplier[]>([]);
+
+  const apiUrl = `https://localhost:7164/api/Supplier/Suppliers`;
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      setsuppliers(data);
+    };
+
+    fetchSuppliers();
+  }, []);
+
+  const fetchSuppliersByName = async (name: string) => {
+    const params = new URLSearchParams({ supplierName: name });
+    const res = await fetch(`https://localhost:7164/api/Supplier/SearchByName?${params}`);
+    const data = await res.json();
+    setsuppliers(data);
+  };
+
+  const fetchSuppliersByIndex = async (index: string) => {
+    const params = new URLSearchParams({ supplierIndex: index });
+    const res = await fetch(`https://localhost:7164/api/Supplier/SearchByIndex?${params}`);
+    const data = await res.json();
+    setsuppliers(data);
+  };
+
+  const fetchSuppliersByCity = async (city: string) => {
+    const params = new URLSearchParams({ city });
+    const res = await fetch(`https://localhost:7164/api/Supplier/SearchByCity?${params}`);
+    const data = await res.json();
+    setsuppliers(data);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+    fetchSuppliersByName(e.target.value);
   };
 
   const handleIndexSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIndexSearchTerm(e.target.value);
+    fetchSuppliersByIndex(e.target.value);
   };
 
   const handleCitySearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCitySearchTerm(e.target.value);
+    fetchSuppliersByCity(e.target.value);
   };
-
-  const filteredSuppliers = suppliers.filter(supplier => {
-    return (
-      supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      supplier.index.toLowerCase().includes(indexSearchTerm.toLowerCase()) &&
-      supplier.city.toLowerCase().includes(citySearchTerm.toLowerCase())
-    );
-  });
 
   return (
     <div className="smodal-overlay">
@@ -85,7 +115,7 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
           </div>
           <div className="button-row">
             <button className="search-btn">{translate('search')}</button>
-            <button className="reset-btn" onClick={() => { setSearchTerm(''); setIndexSearchTerm(''); setCitySearchTerm(''); }}>{translate('reset')}</button>
+            <button className="reset-btn" onClick={() => { setSearchTerm(''); setIndexSearchTerm(''); setCitySearchTerm(''); }}> {translate('reset')}</button>
           </div>
         </div>
         <div className="supplier-list">
@@ -100,11 +130,11 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
               </tr>
             </thead>
             <tbody>
-              {filteredSuppliers.map((supplier, index) => (
-                <tr key={index} onClick={() => onSelectSupplier(supplier.name)}>
+              {Array.isArray(suppliers) && suppliers.map((supplier, index) => (
+                <tr key={index} onClick={() => onSelectSupplier(supplier.supplierName)}>
                   <td><input type="radio" name="supplier" /></td>
-                  <td>{supplier.name}</td>
-                  <td>{supplier.index}</td>
+                  <td>{supplier.supplierName}</td>
+                  <td>{supplier.supplierIndex}</td>
                   <td>{supplier.city}</td>
                 </tr>
               ))}
