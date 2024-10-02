@@ -17,8 +17,6 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
   const [indexSearchTerm, setIndexSearchTerm] = useState('');
   const [citySearchTerm, setCitySearchTerm] = useState('');
   const translate = useTranslation();
-  
-
   const [suppliers, setsuppliers] = useState<Supplier[]>([]);
 
   const apiUrl = `https://localhost:7164/api/Supplier/Suppliers`;
