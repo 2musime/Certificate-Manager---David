@@ -42,30 +42,41 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
     const data = await res.json();
     setParticipants(data);
   };
+  // const fetchParticipantByFirstName = async (firstName: string) => {
+  //   const params = new URLSearchParams({ firstName });
+  //   const res = await fetch(`https://localhost:7164/api/controller/Participants?${params}`);
+  //   const data = await res.json();
+  //   setParticipants(data);
+  // };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    switch (name) {
-      case 'name':
-        setNameSearchTerm(value);
-        fetchParticipantByName(value);
-        break;
-      case 'firstName':
-        setFirstNameSearchTerm(value);
-        break;
-      case 'userId':
-        setUserIdSearchTerm(value);
-        break;
-      case 'department':
-        setDepartmentSearchTerm(value);
-        break;
-      case 'plant':
-        setPlantSearchTerm(value);
-        break;
-      default:
-        break;
-    }
+    setNameSearchTerm(e.target.value);
+    fetchParticipantByName(e.target.value);
   };
+  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   switch (name) {
+  //     case 'name':
+  //       setNameSearchTerm(value);
+  //       fetchParticipantByName(value);
+  //       break;
+  //     case 'firstName':
+  //       setFirstNameSearchTerm(value);
+  //       fetchParticipantByFirstName(value);
+  //       break;
+  //     case 'userId':
+  //       setUserIdSearchTerm(value);
+  //       break;
+  //     case 'department':
+  //       setDepartmentSearchTerm(value);
+  //       break;
+  //     case 'plant':
+  //       setPlantSearchTerm(value);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const handleReset = () => {
     setNameSearchTerm('');

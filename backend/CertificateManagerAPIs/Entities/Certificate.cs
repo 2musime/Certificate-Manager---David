@@ -13,7 +13,7 @@ public partial class Certificate
 
     public DateTime ValidTo { get; set; }
 
-    public string PdfFile { get; set; } = null!;
+    public byte[] PdfFile { get; set; } = null!;
 
     public int? UserAssigned { get; set; }
 
