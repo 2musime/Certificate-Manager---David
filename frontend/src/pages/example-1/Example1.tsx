@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { getCertificates, deleteCertificate } from '../../common/components/DB/indexedDB';
+import { useNavigate } from 'react-router';
+import { useLanguage } from '../../common/context/LanguageContext';
 import Table from '../../common/components/table/Table';
 import GearIcon from '../../common/components/icons/gear';
 import '../example-1/Table.css';
-import { useNavigate } from 'react-router';
-import { useLanguage } from '../../common/context/LanguageContext';
 
 interface Certificate {
   id: number;
-  supplier: string;
-  certificateType: string;
+  supplierDetails: string;
+  type: string;
   validFrom: string;
   validTo: string;
-  pdfFile?: string;
 }
 
 const Example1: React.FC = () => {
@@ -21,12 +19,16 @@ const Example1: React.FC = () => {
   const { translations } = useLanguage();
 
   useEffect(() => {
-    async function fetchData() {
-      const data: Certificate[] = await getCertificates();
-      setCertificates(data);
+    async function fetchCertificates() {
+      try {
+        const response = await fetch('https://localhost:7164/api/Certificate');
+        const data = await response.json();
+        setCertificates(data);
+      } catch (error) {
+        console.error('Error fetching certificates:', error);
+      }
     }
-
-    fetchData();
+    fetchCertificates();
   }, []);
 
   const handleEditNavigate = (id: number) => {
@@ -36,7 +38,7 @@ const Example1: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this certificate?')) {
       try {
-        await deleteCertificate(id);
+        await fetch(`/api/Certificate/${id}`, { method: 'DELETE' });
         setCertificates((prevCertificates) =>
           prevCertificates.filter((certificate) => certificate.id !== id)
         );
@@ -48,7 +50,7 @@ const Example1: React.FC = () => {
 
   return (
     <div>
-      <h2></h2>
+      <h2>{translations['certificates']}</h2>
       <Table data={[]} onNewCertificate={() => navigate('/new-certificate')} />
       <table>
         <thead>
@@ -69,8 +71,8 @@ const Example1: React.FC = () => {
                   onDelete={() => handleDelete(certificate.id)}
                 />
               </td>
-              <td>{certificate.supplier}</td>
-              <td>{certificate.certificateType}</td>
+              <td>{certificate.supplierDetails}</td>
+              <td>{certificate.type}</td>
               <td>{certificate.validFrom}</td>
               <td>{certificate.validTo}</td>
             </tr>

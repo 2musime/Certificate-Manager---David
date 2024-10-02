@@ -87,3 +87,7 @@ GET {{CertificateManagerAPIs_HostAddress}}/api/supplier
 GET {{CertificateManagerAPIs_HostAddress}}/api/supplier/Search-supplier/1
 
 ###
+
+GET {{CertificateManagerAPIs_HostAddress}}/api/controller/Participants
+
+###
