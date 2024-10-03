@@ -3,13 +3,13 @@ namespace CertificateManagerAPIs.DTO
 {
     public class CertificateCreateDto
     {
-        public int SupplierId;
+        public int SupplierId { get; set; }
         public string Type { get; set; } = null!;
         public DateTime ValidFrom { get; set; }
         public DateTime ValidTo { get; set; }
-        public byte[] PdfFile { get; set; } = null!;
-        public int? UserAssigned { get; set; }
-        public List<int>? AssignedUserIds { get; set; }
-        public List<CommentDto>? Comments { get; set; }
+        public IFormFile PdfFile { get; set; } = null!;
+        //public int? UserAssigned { get; set; }
+        public List<int>? AssignedUserIds { get; set; } = new List<int>();
+        public List<CommentDto>? Comments { get; set; } = new List<CommentDto>();
     }
 }

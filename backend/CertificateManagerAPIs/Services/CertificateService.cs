@@ -71,16 +71,28 @@ namespace CertificateManagerAPIs.Services
 
         public async Task CreateCertificateAsync(CertificateCreateDto dto)
         {
+            byte[] pdfBytes = null;
+
+            if (dto.PdfFile != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await dto.PdfFile.CopyToAsync(memoryStream);
+                    pdfBytes = memoryStream.ToArray();
+                }
+            }
+
             var certificate = new Certificate
             {
                 Type = dto.Type,
                 ValidFrom = dto.ValidFrom,
                 ValidTo = dto.ValidTo,
-                PdfFile = dto.PdfFile,
+                PdfFile = pdfBytes,
                 SupplierId = dto.SupplierId,
                 AssignedUsers = new List<AssignedUser>(),
                 Comments = new List<Comment>()
             };
+
             if (dto.AssignedUserIds != null)
             {
                 foreach (var userId in dto.AssignedUserIds)
@@ -92,6 +104,7 @@ namespace CertificateManagerAPIs.Services
                     });
                 }
             }
+
             if (dto.Comments != null)
             {
                 foreach (var commentDto in dto.Comments)
@@ -111,10 +124,20 @@ namespace CertificateManagerAPIs.Services
         {
             var certificate = await _certificateRepository.GetCertificateByIdAsync(id);
             if (certificate == null) throw new Exception("Certificate not found");
+
             certificate.Type = dto.Type;
             certificate.ValidFrom = dto.ValidFrom;
             certificate.ValidTo = dto.ValidTo;
-            certificate.PdfFile = dto.PdfFile;
+
+            if (dto.PdfFile != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await dto.PdfFile.CopyToAsync(memoryStream);
+                    certificate.PdfFile = memoryStream.ToArray();
+                }
+            }
+
             certificate.UserAssigned = dto.UserAssigned;
             certificate.SupplierId = dto.SupplierId;
 
@@ -130,6 +153,7 @@ namespace CertificateManagerAPIs.Services
                     certificate.Comments.Add(newComment);
                 }
             }
+
             if (dto.AssignedUserIds != null && dto.AssignedUserIds.Any())
             {
                 foreach (var userId in dto.AssignedUserIds)
@@ -142,6 +166,7 @@ namespace CertificateManagerAPIs.Services
                     certificate.AssignedUsers.Add(newAssignedUser);
                 }
             }
+
             await _certificateRepository.UpdateCertificateAsync(certificate);
             await _certificateRepository.SaveChangesAsync();
         }
