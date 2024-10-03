@@ -1,5 +1,4 @@
 ﻿using CertificateManagerAPIs.DTO;
-using CertificateManagerAPIs.Entities;
 using CertificateManagerAPIs.Repositories;
 
 namespace CertificateManagerAPIs.Services
@@ -7,69 +6,52 @@ namespace CertificateManagerAPIs.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<User>> GetAllUserAsync()
+        public async Task<IEnumerable<UserDto>> GetFilteredUsersAsync(string Name, string firstName, int? userId, string Department, string plant, string email)
         {
-            return await _userRepository.GetAllUserAsync();
-        }
+            var users = await _userRepository.GetAllUserAsync();
 
-        public async Task<IEnumerable<UserDto>> SearchUsersByNameAsync(string userName)
-        {
-            var user = await _userRepository.SearchUsersByNameAsync(userName);
-            return user.Select(s => new UserDto
+            if (!string.IsNullOrEmpty(Name))
             {
-                Name = s.Name,
-                FirstName = s.FirstName,
-                UserId = s.UserId,
-                Department = s.Department,
-                Plant = s.Plant,
-                Email = s.Email
-            }).ToList();
-        }
+                users = users.Where(u => u.Name.Contains(Name, StringComparison.OrdinalIgnoreCase));
+            }
 
-        public async Task<IEnumerable<UserDto>> SearchUsersByFirstNameAsync(string firstName)
-        {
-            var user = await _userRepository.SearchUsersByFirstNameAsync(firstName);
-            return user.Select(s => new UserDto
+            if (!string.IsNullOrEmpty(firstName))
             {
-                Name = s.Name,
-                FirstName = s.FirstName,
-                UserId = s.UserId,
-                Department = s.Department,
-                Plant = s.Plant,
-                Email = s.Email
-            }).ToList();
-        }
+                users = users.Where(u => u.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase));
+            }
 
-        public async Task<IEnumerable<UserDto>> SearchUsersByUserIdAsync(int userId)
-        {
-            var user = await _userRepository.SearchUsersByUserIdAsync(userId);
-            return user.Select(s => new UserDto
+            if (userId.HasValue)
             {
-                Name = s.Name,
-                FirstName = s.FirstName,
-                UserId = s.UserId,
-                Department = s.Department,
-                Plant = s.Plant,
-                Email = s.Email
-            }).ToList();
-        }
+                users = users.Where(u => u.UserId == userId.Value);
+            }
 
-        public async Task<IEnumerable<UserDto>> SearchUsersByPlantAsync(string plant)
-        {
-            var user = await _userRepository.SearchUsersByPlantAsync(plant);
-            return user.Select(s => new UserDto
+            if (!string.IsNullOrEmpty(Department))
             {
-                Name = s.Name,
-                FirstName = s.FirstName,
-                UserId = s.UserId,
-                Department = s.Department,
-                Plant = s.Plant,
-                Email = s.Email
+                users = users.Where(u => u.Department.Contains(Department, StringComparison.OrdinalIgnoreCase));
+            }
+            if (!string.IsNullOrEmpty(plant))
+            {
+                users = users.Where(u => u.Plant.Contains(plant, StringComparison.OrdinalIgnoreCase));
+            }
+            if (!string.IsNullOrEmpty(email))
+            {
+                users = users.Where(u => u.Email.Contains(email, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return users.Select(u => new UserDto
+            {
+                Name = u.Name,
+                FirstName = u.FirstName,
+                UserId = u.UserId,
+                Department = u.Department,
+                Plant = u.Plant,
+                Email = u.Email
             }).ToList();
         }
     }

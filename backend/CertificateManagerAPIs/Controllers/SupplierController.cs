@@ -2,12 +2,11 @@
 using CertificateManagerAPIs.Services;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace CertificateManagerAPIs.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class SupplierController : Controller
+    [Route("[controller]")]
+    public class SupplierController : ControllerBase
     {
         private readonly ISupplierService _supplierService;
 
@@ -15,34 +14,13 @@ namespace CertificateManagerAPIs.Controllers
         {
             _supplierService = supplierService;
         }
-
-        [HttpGet("Suppliers")]
-        public async Task<ActionResult<IEnumerable<SupplierDto>>> GetSuppliersAsync()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SupplierDto>>> GetSuppliersAsync(
+            [FromQuery] string supplierName = null,
+            [FromQuery] int? supplierIndex = null,
+            [FromQuery] string city = null)
         {
-            var suppliers = await _supplierService.GetSuppliersAsync();
-            return Ok(suppliers);
-        }
-
-        [HttpGet("SearchByName")]
-        public async Task<IActionResult> SearchByName(string supplierName)
-        {
-            var suppliers = await _supplierService.SearchSuppliersByNameAsync(supplierName);
-            return Ok(suppliers);
-        }
-
-        // Search by Supplier Index
-        [HttpGet("SearchByIndex")]
-        public async Task<IActionResult> SearchByIndex(int supplierIndex)
-        {
-            var suppliers = await _supplierService.SearchSuppliersByIndexAsync(supplierIndex);
-            return Ok(suppliers);
-        }
-
-        // Search by City
-        [HttpGet("SearchByCity")]
-        public async Task<IActionResult> SearchByCity(string city)
-        {
-            var suppliers = await _supplierService.SearchSuppliersByCityAsync(city);
+            var suppliers = await _supplierService.GetFilteredSuppliersAsync(supplierName, supplierIndex, city);
             return Ok(suppliers);
         }
     }
