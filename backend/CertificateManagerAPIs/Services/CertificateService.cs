@@ -89,6 +89,7 @@ namespace CertificateManagerAPIs.Services
                 ValidTo = dto.ValidTo,
                 PdfFile = pdfBytes,
                 SupplierId = dto.SupplierId,
+                UserAssigned = dto.UserAssigned,
                 AssignedUsers = new List<AssignedUser>(),
                 Comments = new List<Comment>()
             };
@@ -105,17 +106,19 @@ namespace CertificateManagerAPIs.Services
                 }
             }
 
-            if (dto.Comments != null)
+            if (dto.Comments != null && dto.Comments.Any())
             {
                 foreach (var commentDto in dto.Comments)
                 {
                     certificate.Comments.Add(new Comment
                     {
+                        CertificateId = certificate.Id,
                         UserId = commentDto.UserId,
                         UserComment = commentDto.UserComment
                     });
                 }
             }
+
             await _certificateRepository.AddCertificateAsync(certificate);
             await _certificateRepository.SaveChangesAsync();
         }
@@ -147,6 +150,7 @@ namespace CertificateManagerAPIs.Services
                 {
                     var newComment = new Comment
                     {
+                        CertificateId = certificate.Id,
                         UserId = commentDto.UserId,
                         UserComment = commentDto.UserComment
                     };

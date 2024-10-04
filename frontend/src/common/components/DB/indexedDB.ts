@@ -5,10 +5,10 @@ interface Certificate {
   certificateType: string;
   validFrom: string;
   validTo: string;
-  pdfFile?: string;
+  pdfFile?: File;
   pdfPreview?: string;
 }
-export const initializeDB = () => {
+const initializeDB = () => {
   return new Promise<IDBDatabase>((resolve, reject) => {
     const request = indexedDB.open('certificate-db', 1);
 

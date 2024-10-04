@@ -4,9 +4,10 @@ import useTranslation from '../../../context/useTranslation';
 
 interface SupplierLookupModalProps {
   onClose: () => void;
-  onSelectSupplier: (name: string) => void;
+  onSelectSupplier: (id: number) => void;
 }
 interface Supplier {
+  supplierId: number;
   supplierName: string;
   supplierIndex: string;
   city: string;
@@ -129,7 +130,7 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
             </thead>
             <tbody>
               {Array.isArray(suppliers) && suppliers.map((supplier, index) => (
-                <tr key={index} onClick={() => onSelectSupplier(supplier.supplierName)}>
+                <tr key={index} onClick={() => onSelectSupplier(supplier.supplierId)}>
                   <td><input type="radio" name="supplier" /></td>
                   <td>{supplier.supplierName}</td>
                   <td>{supplier.supplierIndex}</td>
