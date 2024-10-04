@@ -14,14 +14,14 @@ namespace CertificateManagerAPIs.Controllers
         {
             _supplierService = supplierService;
         }
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SupplierDto>>> GetSuppliersAsync(
-            [FromQuery] string supplierName = null,
-            [FromQuery] int? supplierIndex = null,
-            [FromQuery] string city = null)
+        public async Task<ActionResult<IEnumerable<SupplierDto>>> GetSuppliersAsync([FromQuery] SupplierDto filter)
         {
-            var suppliers = await _supplierService.GetFilteredSuppliersAsync(supplierName, supplierIndex, city);
+            var suppliers = await _supplierService
+                .GetFilteredSuppliersAsync(filter.SupplierName, filter.SupplierIndex, filter.City);
             return Ok(suppliers);
         }
+
     }
 }
