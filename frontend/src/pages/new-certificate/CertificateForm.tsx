@@ -71,7 +71,7 @@ const getCertificate = async (): Promise<CertificateCreateDto> => {
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [participants, setParticipants] = useState<{ name: string; department: string; email: string }[]>([]);
+  const [participants, setParticipants] = useState<{ userId:number,name: string; department: string; email: string }[]>([]);
   const [openComment,setOpenComment]=useState(false)
   useEffect(() => {
     if (isEdit && certificateId) {
@@ -85,6 +85,7 @@ const getCertificate = async (): Promise<CertificateCreateDto> => {
             supplier: certificate.supplierId,
             pdfFile: certificate.pdfFile,
             pdfPreview: certificate.pdfPreview || undefined
+            
           });
         } catch (error) {
           console.error('Error fetching certificate:', error);
@@ -135,11 +136,6 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
       formData.append(`Comments[${index}].UserComment`, comment.userComment);
     });
   }
-  if (certificateData.assignedUserIds && certificateData.assignedUserIds.length > 0) {
-    certificateData.assignedUserIds.forEach((userId, index) => {
-      formData.append(`AssignedUserIds[${index}]`, userId.toString());
-    });
-  }
   try {
     const response = await fetch(`https://localhost:7164/api/Certificate/${certificateId}`, {
       method: 'PUT',
@@ -156,8 +152,6 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
     console.error('Error updating certificate:', error);
   }
 };
-
-
   const addCertificate = async (certificateData: CertificateCreateDto) => {
     const formData = new FormData();
   
@@ -165,24 +159,16 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
     formData.append('Type', certificateData.type);
     formData.append('ValidFrom', certificateData.validFrom);
     formData.append('ValidTo', certificateData.validTo);
+    formData.append('userAssigned',participants[0]?.userId);
   
     if (certificateData.pdfFile) {
       formData.append('PdfFile', certificateData.pdfFile);
-    }
-  
-    if (certificateData.userAssigned) {
-      formData.append('UserAssigned', certificateData.userAssigned.toString());
     }
   
     if (certificateData.comments && certificateData.comments.length > 0) {
       certificateData.comments.forEach((comment, index) => {
         formData.append(`Comments[${index}].UserId`, comment.userId.toString());
         formData.append(`Comments[${index}].UserComment`, comment.userComment);
-      });
-    }
-    if (certificateData.assignedUserIds && certificateData.assignedUserIds.length > 0) {
-      certificateData.assignedUserIds.forEach((userId, index) => {
-        formData.append(`AssignedUserIds[${index}]`, userId.toString());
       });
     }
     try {
@@ -220,7 +206,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
           userId: Number(comment.user),
           userComment: comment.text,
         })),
-        assignedUserIds: participants.map(participant => Number(participant.email)),
+        userAssigned: participants[0]?.userId,
       };
   
       if (certificateId && isEdit) {
@@ -234,7 +220,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
               userId: Number(comment.user),
               userComment: comment.text,
             })),
-            assignedUserIds: participants.map(participant => Number(participant.email)),
+            userAssigned: participants.map(participant => Number(participant.email)),
           }, certificateId);        
       } else {
         await addCertificate(certificateData);

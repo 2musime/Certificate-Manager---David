@@ -72,7 +72,6 @@ namespace CertificateManagerAPIs.Services
         public async Task CreateCertificateAsync(CertificateCreateDto dto)
         {
             byte[] pdfBytes = null;
-
             if (dto.PdfFile != null)
             {
                 using (var memoryStream = new MemoryStream())
@@ -81,7 +80,6 @@ namespace CertificateManagerAPIs.Services
                     pdfBytes = memoryStream.ToArray();
                 }
             }
-
             var certificate = new Certificate
             {
                 Type = dto.Type,
@@ -94,7 +92,7 @@ namespace CertificateManagerAPIs.Services
                 Comments = new List<Comment>()
             };
 
-            if (dto.AssignedUserIds != null)
+            if (dto.AssignedUserIds != null && dto.AssignedUserIds.Any())
             {
                 foreach (var userId in dto.AssignedUserIds)
                 {
@@ -112,11 +110,12 @@ namespace CertificateManagerAPIs.Services
                 {
                     certificate.Comments.Add(new Comment
                     {
-                        CertificateId = certificate.Id,
                         UserId = commentDto.UserId,
-                        UserComment = commentDto.UserComment
+                        UserComment = commentDto.UserComment,
+                        Certificate = certificate
                     });
                 }
+                await _certificateRepository.SaveChangesAsync();
             }
 
             await _certificateRepository.AddCertificateAsync(certificate);
