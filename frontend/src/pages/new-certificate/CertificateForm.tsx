@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { addCertificate, updateCertificate } from "../../common/components/DB/indexedDB";
+import {  useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 import '../new-certificate/NewCertificate.css';
 import Search from '../../common/components/icons/search';
 import X from '../../common/components/icons/x';
-import { getCertificates } from "../../common/components/DB/indexedDB";
 import SupplierLookupModal from '../../common/components/modals/supplier/SupplierLookupModal';
 import ParticipantLookupModal from '../../common/components/modals/participant/ParticipantLookupModal';
 import { useLanguage } from '../../common/context/LanguageContext';
@@ -18,56 +17,85 @@ interface Comment {
   text: string;
   user: string;
 }
-
-
+interface CertificateCreateDto {
+  supplierId: number;
+  type: string;
+  validFrom: string;
+  validTo: string;
+  pdfFile: File | undefined;
+  userAssigned?: number;
+  comments: Array<{
+    userId: number;
+    userComment: string;
+  }>;
+  assignedUserIds: number[];
+  pdfPreview?: string | undefined;
+}
 const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: ICertificateForm) => {
   const { translations } = useLanguage();
   const navigate = useNavigate();
   const validFromRef = useRef<HTMLInputElement>(null);
   const validToRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState({
-    supplier: '',
+  const [formData, setFormData] = useState<{
+    supplier: number;
+    certificateType: string;
+    validFrom: string;
+    validTo: string;
+    pdfFile: File | undefined; 
+    pdfPreview: undefined | string;
+}>({
+    supplier: 0,
     certificateType: '',
     validFrom: '',
     validTo: '',
-    pdfFile: '',
-    pdfPreview: '' as string | null,
-  });
+    pdfFile: undefined,
+    pdfPreview: undefined,
+});
+
+const { id } = useParams<{ id: string }>(); 
+const getCertificate = async (): Promise<CertificateCreateDto> => {
+  try {
+    const response = await fetch(`https://localhost:7164/api/Certificate/${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch certificate: ${response.statusText}`);
+    }
+    const fetchedCertificate: CertificateCreateDto = await response.json();
+    return fetchedCertificate;
+  } catch (error) {
+    console.error('Error fetching certificate:', error);
+    throw error;
+  }
+};
   const [error, setError] = useState<string | null>(null);
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
   const [isParticipantModalOpen, setIsParticipantModalOpen] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
-
   const [participants, setParticipants] = useState<{ name: string; department: string; email: string }[]>([]);
   const [openComment,setOpenComment]=useState(false)
   useEffect(() => {
     if (isEdit && certificateId) {
       async function fetchData() {
-        const certificates = await getCertificates();
-        const filteredCertificate = certificates.filter((certificate) => certificate.id === certificateId);
-        filteredCertificate.map((certificate) => (
+        try {
+          const certificate = await getCertificate();          
           setFormData({
             validFrom: certificate.validFrom ? certificate.validFrom : '',
             validTo: certificate.validTo ? certificate.validTo : '',
-            certificateType: certificate.certificateType,
-            supplier: certificate.supplier,
-            pdfFile: certificate.pdfFile || '',
-            pdfPreview: certificate.pdfPreview || null
-          })
-        ));
+            certificateType: certificate.type,
+            supplier: certificate.supplierId,
+            pdfFile: certificate.pdfFile,
+            pdfPreview: certificate.pdfPreview || undefined
+          });
+        } catch (error) {
+          console.error('Error fetching certificate:', error);
+          setError('Could not fetch certificate details.');
+        }
       }
       fetchData();
     }
-  }, [certificateId]);
+  }, [certificateId, isEdit]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleChanges = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChanges = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) =>  {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -76,68 +104,162 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
+    console.log('Selected file:', file);
+    
+    if (file) {
+        console.log('File type:', file.type);
+    }
+
     if (file && file.type === 'application/pdf') {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result) {
-          setFormData({
+        setFormData({
             ...formData,
-            pdfFile: reader.result as string,
-            pdfPreview: reader.result as string,
-          });
-        }
-      };
-      reader.readAsDataURL(file);
+            pdfFile: file,
+            pdfPreview: URL.createObjectURL(file),
+        });
     } else {
-      alert(translations['invalidFileError']);
+        alert(translations['invalidFileError']);
+    }
+};
+const updateCertificate = async (certificateData: CertificateCreateDto, certificateId: number) => {
+  const formData = new FormData();
+  formData.append('SupplierId', certificateData.supplierId.toString());
+  formData.append('Type', certificateData.type);
+  formData.append('ValidFrom', certificateData.validFrom);
+  formData.append('ValidTo', certificateData.validTo);
+  if (certificateData.pdfFile) {
+    formData.append('PdfFile', certificateData.pdfFile);
+  }
+  if (certificateData.comments && certificateData.comments.length > 0) {
+    certificateData.comments.forEach((comment, index) => {
+      formData.append(`Comments[${index}].UserId`, comment.userId.toString());
+      formData.append(`Comments[${index}].UserComment`, comment.userComment);
+    });
+  }
+  if (certificateData.assignedUserIds && certificateData.assignedUserIds.length > 0) {
+    certificateData.assignedUserIds.forEach((userId, index) => {
+      formData.append(`AssignedUserIds[${index}]`, userId.toString());
+    });
+  }
+  try {
+    const response = await fetch(`https://localhost:7164/api/Certificate/${certificateId}`, {
+      method: 'PUT',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Certificate updated successfully:', data);
+    } else {
+      console.error('Failed to update certificate:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error updating certificate:', error);
+  }
+};
+
+
+  const addCertificate = async (certificateData: CertificateCreateDto) => {
+    const formData = new FormData();
+  
+    formData.append('SupplierId', certificateData.supplierId.toString());
+    formData.append('Type', certificateData.type);
+    formData.append('ValidFrom', certificateData.validFrom);
+    formData.append('ValidTo', certificateData.validTo);
+  
+    if (certificateData.pdfFile) {
+      formData.append('PdfFile', certificateData.pdfFile);
+    }
+  
+    if (certificateData.userAssigned) {
+      formData.append('UserAssigned', certificateData.userAssigned.toString());
+    }
+  
+    if (certificateData.comments && certificateData.comments.length > 0) {
+      certificateData.comments.forEach((comment, index) => {
+        formData.append(`Comments[${index}].UserId`, comment.userId.toString());
+        formData.append(`Comments[${index}].UserComment`, comment.userComment);
+      });
+    }
+    if (certificateData.assignedUserIds && certificateData.assignedUserIds.length > 0) {
+      certificateData.assignedUserIds.forEach((userId, index) => {
+        formData.append(`AssignedUserIds[${index}]`, userId.toString());
+      });
+    }
+    try {
+      const response = await fetch('https://localhost:7164/api/Certificate', {
+        method: 'POST',
+        body: formData
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Certificate created successfully:', data);
+      } else {
+        console.error('Failed to create certificate:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error creating certificate:', error);
     }
   };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.pdfPreview) {
+    if (!formData.pdfFile) {
       setError(translations['pdfRequiredError']);
       return;
     }
+  
     try {
+      const certificateData: CertificateCreateDto = {
+        supplierId: Number(formData.supplier),
+        type: formData.certificateType,
+        validFrom: formData.validFrom,
+        validTo: formData.validTo,
+        pdfFile: formData.pdfFile,
+        comments: comments.map(comment => ({
+          userId: Number(comment.user),
+          userComment: comment.text,
+        })),
+        assignedUserIds: participants.map(participant => Number(participant.email)),
+      };
+  
       if (certificateId && isEdit) {
-        await updateCertificate({
-          id:certificateId,
-          supplier: formData.supplier,
-          certificateType: formData.certificateType,
-          validFrom: formData.validFrom,
-          validTo: formData.validTo,
-          pdfFile: formData.pdfFile,
-        }, certificateId);
+          await updateCertificate({
+            supplierId: formData.supplier,
+            type: formData.certificateType,
+            validFrom: formData.validFrom,
+            validTo: formData.validTo,
+            pdfFile: formData.pdfFile,
+            comments: comments.map(comment => ({
+              userId: Number(comment.user),
+              userComment: comment.text,
+            })),
+            assignedUserIds: participants.map(participant => Number(participant.email)),
+          }, certificateId);        
       } else {
-        await addCertificate({
-          supplier: formData.supplier,
-          certificateType: formData.certificateType,
-          validFrom: formData.validFrom,
-          validTo: formData.validTo,
-          pdfFile: formData.pdfFile,
-        });
+        await addCertificate(certificateData);
       }
+  
       navigate('/example1');
       handleReset();
     } catch (error) {
-      setError('An error occurred while saving the certificate.'); 
+      setError('An error occurred while saving the certificate.');
     }
   };
-
+  
   const handleReset = () => {
     setFormData({
-      supplier: '',
+      supplier: 0,
       certificateType: '',
       validFrom: '',
       validTo: '',
-      pdfFile: '',
-      pdfPreview: null,
+      pdfFile: undefined,
+      pdfPreview: undefined,
     });
     setError(null); 
   };
 
-  const handleSelectSupplier = (supplier: string) => {
+  const handleSelectSupplier = (supplier: number) => {
     setFormData({
       ...formData,
       supplier: supplier,
@@ -176,7 +298,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
                 className="input-field"
               />
               <Search className="icon" onClick={() => setIsSupplierModalOpen(true)} />
-              <X className="icon" onClick={() => setFormData({ ...formData, supplier: '' })} />
+                <X className="icon" onClick={() => setFormData({ ...formData, supplier: 0})} />
             </div>
           </div>
           
@@ -199,7 +321,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
               ref={validFromRef}
               name="validFrom"
               value={formData.validFrom}
-              onChange={handleChange}
+              onChange={handleChanges}
               onFocus={() => { validFromRef.current!.type = "date"; }}
             />
           </div>
@@ -212,7 +334,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
               ref={validToRef}
               name="validTo"
               value={formData.validTo}
-              onChange={handleChange}
+              onChange={handleChanges}
               onFocus={() => { validToRef.current!.type = "date"; }}
               required
             />
@@ -277,7 +399,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
           </div>
           <div className="pdf-preview-container">
             {formData.pdfPreview||formData.pdfFile ? (
-              <iframe src={formData.pdfPreview||formData.pdfFile||''} title={translations['pdfPreview']} className="pdf-preview" />
+              <iframe src={formData.pdfPreview ||''} title={translations['pdfPreview']} className="pdf-preview" />
             ) : (
               <div className="pdf-placeholder">{translations['noPreview']}</div>
             )}
