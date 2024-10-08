@@ -47,7 +47,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
     setNameSearchTerm(e.target.value);
     fetchParticipantByName(e.target.value);
   };
-
+ 
   const handleReset = () => {
     setNameSearchTerm('');
     setFirstNameSearchTerm('');

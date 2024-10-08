@@ -132,9 +132,9 @@ namespace CertificateManagerAPIs.Services
                 {
                     var newComment = new Comment
                     {
+                        CertificateId = certificate.Id,
                         UserId = commentDto.UserId,
-                        UserComment = commentDto.UserComment,
-                        CertificateId = certificate.Id
+                        UserComment = commentDto.UserComment
                     };
                     certificate.Comments.Add(newComment);
                 }
