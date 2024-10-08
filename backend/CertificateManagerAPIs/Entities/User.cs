@@ -21,7 +21,5 @@ public partial class User
 
     public virtual ICollection<AssignedUser> AssignedUsers { get; set; } = new List<AssignedUser>();
 
-    public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
-
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

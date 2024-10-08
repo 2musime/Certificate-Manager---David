@@ -64,10 +64,6 @@ public partial class CertificatedbContext : DbContext
                 .HasForeignKey(d => d.SupplierId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_SupplierId");
-
-            entity.HasOne(d => d.UserAssignedNavigation).WithMany(p => p.Certificates)
-                .HasForeignKey(d => d.UserAssigned)
-                .HasConstraintName("FK_UserAssigned");
         });
 
         modelBuilder.Entity<Comment>(entity =>

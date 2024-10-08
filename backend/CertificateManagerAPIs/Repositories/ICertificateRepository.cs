@@ -1,5 +1,4 @@
 ﻿using CertificateManagerAPIs.Entities;
-
 public interface ICertificateRepository
 {
     Task<IEnumerable<Certificate>> GetCertificatesAsync();
