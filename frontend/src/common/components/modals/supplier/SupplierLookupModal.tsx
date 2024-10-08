@@ -1,12 +1,12 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import '../supplier/SupplierLookupModal.css';
 import useTranslation from '../../../context/useTranslation';
 
 interface SupplierLookupModalProps {
   onClose: () => void;
-  onSelectSupplier: (id: number) => void;
+  onSelectSupplier: (supplier: Supplier) => void;
 }
-interface Supplier {
+export interface Supplier {
   supplierId: number;
   supplierName: string;
   supplierIndex: string;
@@ -20,52 +20,23 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
   const translate = useTranslation();
   const [suppliers, setsuppliers] = useState<Supplier[]>([]);
 
-  const apiUrl = `https://localhost:7164/api/Supplier/Suppliers`;
-
-  useEffect(() => {
-    const fetchSuppliers = async () => {
-      const res = await fetch(apiUrl);
-      const data = await res.json();
-      setsuppliers(data);
-    };
-
-    fetchSuppliers();
-  }, []);
-
-  const fetchSuppliersByName = async (name: string) => {
-    const params = new URLSearchParams({ supplierName: name });
-    const res = await fetch(`https://localhost:7164/api/Supplier/SearchByName?${params}`);
-    const data = await res.json();
-    setsuppliers(data);
-  };
-
-  const fetchSuppliersByIndex = async (index: string) => {
-    const params = new URLSearchParams({ supplierIndex: index });
-    const res = await fetch(`https://localhost:7164/api/Supplier/SearchByIndex?${params}`);
-    const data = await res.json();
-    setsuppliers(data);
-  };
-
-  const fetchSuppliersByCity = async (city: string) => {
-    const params = new URLSearchParams({ city });
-    const res = await fetch(`https://localhost:7164/api/Supplier/SearchByCity?${params}`);
+  const fetchSuppliersByName = async () => {
+    const params = new URLSearchParams({ supplierName: searchTerm,supplierIndex: indexSearchTerm,city:citySearchTerm });
+    const res = await fetch(`https://localhost:7164/api/Supplier?${params}`);
     const data = await res.json();
     setsuppliers(data);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    fetchSuppliersByName(e.target.value);
   };
 
   const handleIndexSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIndexSearchTerm(e.target.value);
-    fetchSuppliersByIndex(e.target.value);
   };
 
   const handleCitySearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCitySearchTerm(e.target.value);
-    fetchSuppliersByCity(e.target.value);
   };
 
   return (
@@ -113,8 +84,8 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
             </div>
           </div>
           <div className="button-row">
-            <button className="search-btn">{translate('search')}</button>
-            <button className="reset-btn" onClick={() => { setSearchTerm(''); setIndexSearchTerm(''); setCitySearchTerm(''); }}> {translate('reset')}</button>
+            <button onClick={fetchSuppliersByName} className="search-btn">{translate('search')}</button>
+            <button className="reset-btn" onClick={() => { setSearchTerm(''); setIndexSearchTerm(''); setCitySearchTerm('');setsuppliers([]) }}> {translate('reset')}</button>
           </div>
         </div>
         <div className="supplier-list">
@@ -130,7 +101,7 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
             </thead>
             <tbody>
               {Array.isArray(suppliers) && suppliers.map((supplier, index) => (
-                <tr key={index} onClick={() => onSelectSupplier(supplier.supplierId)}>
+                <tr key={index} onClick={() => onSelectSupplier(supplier)}>
                   <td><input type="radio" name="supplier" /></td>
                   <td>{supplier.supplierName}</td>
                   <td>{supplier.supplierIndex}</td>

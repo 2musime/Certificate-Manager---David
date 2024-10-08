@@ -8,6 +8,6 @@ namespace CertificateManagerAPIs.DTO
         public DateTime ValidFrom { get; set; }
         public DateTime ValidTo { get; set; }
         public IFormFile PdfFile { get; set; } = null!;
-        public List<int> AssignedUserIds { get; set; } = new List<int>();
+        public List<string> AssignedUserIds { get; set; } = new List<string>();
     }
 }

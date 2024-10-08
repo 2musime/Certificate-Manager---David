@@ -7,7 +7,7 @@ const UserSwitcher: React.FC = () => {
   const [users, setUsers] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch('https://localhost:7164/api/controller/Participants')
+    fetch('https://localhost:7164/api/User')
       .then(response => response.json())
       .then(data => {
         setUsers(data.map((user: any) => user.name));

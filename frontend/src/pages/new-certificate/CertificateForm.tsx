@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import '../new-certificate/NewCertificate.css';
 import Search from '../../common/components/icons/search';
 import X from '../../common/components/icons/x';
-import SupplierLookupModal from '../../common/components/modals/supplier/SupplierLookupModal';
+import SupplierLookupModal, { Supplier } from '../../common/components/modals/supplier/SupplierLookupModal';
 import ParticipantLookupModal from '../../common/components/modals/participant/ParticipantLookupModal';
 import { useLanguage } from '../../common/context/LanguageContext';
 import CommentModal from '../../common/components/modals/comment/CommentModal';
@@ -18,7 +18,7 @@ interface Comment {
   user: string;
 }
 interface CertificateCreateDto {
-  supplierId: number;
+  supplier: Supplier;
   type: string;
   validFrom: string;
   validTo: string;
@@ -37,14 +37,16 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
   const validFromRef = useRef<HTMLInputElement>(null);
   const validToRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<{
-    supplier: number;
+    supplier: Supplier;
     certificateType: string;
     validFrom: string;
     validTo: string;
     pdfFile: File | undefined; 
     pdfPreview: undefined | string;
 }>({
-    supplier: 0,
+    supplier: {
+      supplierId:0,supplierIndex:'',supplierName:'',city:''
+    },
     certificateType: '',
     validFrom: '',
     validTo: '',
@@ -82,7 +84,7 @@ const getCertificate = async (): Promise<CertificateCreateDto> => {
             validFrom: certificate.validFrom ? certificate.validFrom : '',
             validTo: certificate.validTo ? certificate.validTo : '',
             certificateType: certificate.type,
-            supplier: certificate.supplierId,
+            supplier: certificate.supplier,
             pdfFile: certificate.pdfFile,
             pdfPreview: certificate.pdfPreview || undefined
             
@@ -94,7 +96,7 @@ const getCertificate = async (): Promise<CertificateCreateDto> => {
       }
       fetchData();
     }
-  }, [certificateId, isEdit]);
+  }, [certificateId]);
 
   const handleChanges = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) =>  {
     setFormData({
@@ -123,7 +125,7 @@ const getCertificate = async (): Promise<CertificateCreateDto> => {
 };
 const updateCertificate = async (certificateData: CertificateCreateDto, certificateId: number) => {
   const formData = new FormData();
-  formData.append('SupplierId', certificateData.supplierId.toString());
+  formData.append('SupplierId', certificateData.supplier.toString());
   formData.append('Type', certificateData.type);
   formData.append('ValidFrom', certificateData.validFrom);
   formData.append('ValidTo', certificateData.validTo);
@@ -155,11 +157,13 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
   const addCertificate = async (certificateData: CertificateCreateDto) => {
     const formData = new FormData();
   
-    formData.append('SupplierId', certificateData.supplierId.toString());
+    formData.append('SupplierId', certificateData.supplier.supplierId.toString());
     formData.append('Type', certificateData.type);
     formData.append('ValidFrom', certificateData.validFrom);
     formData.append('ValidTo', certificateData.validTo);
-    formData.append('userAssigned',participants[0]?.userId);
+    certificateData.assignedUserIds.forEach(id => {
+      formData.append('AssignedUserIds[]', id.toString());
+  });
   
     if (certificateData.pdfFile) {
       formData.append('PdfFile', certificateData.pdfFile);
@@ -197,7 +201,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
   
     try {
       const certificateData: CertificateCreateDto = {
-        supplierId: Number(formData.supplier),
+        supplier: formData.supplier,
         type: formData.certificateType,
         validFrom: formData.validFrom,
         validTo: formData.validTo,
@@ -206,12 +210,12 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
           userId: Number(comment.user),
           userComment: comment.text,
         })),
-        userAssigned: participants[0]?.userId,
+        assignedUserIds: participants.map((user)=>user.userId),
       };
   
       if (certificateId && isEdit) {
           await updateCertificate({
-            supplierId: formData.supplier,
+            supplier: formData.supplier,
             type: formData.certificateType,
             validFrom: formData.validFrom,
             validTo: formData.validTo,
@@ -220,7 +224,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
               userId: Number(comment.user),
               userComment: comment.text,
             })),
-            userAssigned: participants.map(participant => Number(participant.email)),
+            assignedUserIds: participants.map(participant => Number(participant.userId)),
           }, certificateId);        
       } else {
         await addCertificate(certificateData);
@@ -235,7 +239,9 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
   
   const handleReset = () => {
     setFormData({
-      supplier: 0,
+      supplier: {
+        supplierId:0,supplierIndex:'',supplierName:'',city:''
+      },
       certificateType: '',
       validFrom: '',
       validTo: '',
@@ -245,7 +251,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
     setError(null); 
   };
 
-  const handleSelectSupplier = (supplier: number) => {
+  const handleSelectSupplier = (supplier: Supplier) => {
     setFormData({
       ...formData,
       supplier: supplier,
@@ -257,7 +263,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
       prevParticipants.filter(participant => participant.email !== email)
     );
   };
-  const handleAddParticipant = (selectedParticipants: { name: string; department: string; email: string }[]) => {
+  const handleAddParticipant = (selectedParticipants: {userId:number, name: string; department: string; email: string }[]) => {
     const _participants = participants
 
     selectedParticipants.forEach(participant => {
@@ -279,12 +285,14 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
               <input
                 type="text" readOnly
                 name="supplier"
-                value={formData.supplier}
+                value={formData?.supplier?.supplierName}
                 required
                 className="input-field"
               />
               <Search className="icon" onClick={() => setIsSupplierModalOpen(true)} />
-                <X className="icon" onClick={() => setFormData({ ...formData, supplier: 0})} />
+                <X className="icon" onClick={() => setFormData({ ...formData, supplier: {
+                  supplierId:0,supplierIndex:'',supplierName:'',city:''
+                }})} />
             </div>
           </div>
           
@@ -319,7 +327,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
               placeholder="Click to select date"
               ref={validToRef}
               name="validTo"
-              value={formData.validTo}
+              value={formData?.validTo}
               onChange={handleChanges}
               onFocus={() => { validToRef.current!.type = "date"; }}
               required
@@ -358,7 +366,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
                 </tr>
               </thead>
               <tbody>
-                {participants.map((participant, index) => (
+                {participants?.map((participant, index) => (
                   <tr key={index}>
                     <td>
                     <button type='button' onClick={() => handleDeleteParticipant(participant.email)}>
@@ -384,8 +392,8 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
             }}>{translations['upload']}</button>
           </div>
           <div className="pdf-preview-container">
-            {formData.pdfPreview||formData.pdfFile ? (
-              <iframe src={formData.pdfPreview ||''} title={translations['pdfPreview']} className="pdf-preview" />
+            {formData?.pdfFile|| formData?.pdfPreview? (
+              <iframe src={formData?.pdfPreview ||''} title={translations['pdfPreview']} className="pdf-preview" />
             ) : (
               <div className="pdf-placeholder">{translations['noPreview']}</div>
             )}

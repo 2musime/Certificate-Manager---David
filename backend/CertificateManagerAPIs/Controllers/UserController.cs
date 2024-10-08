@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CertificateManagerAPIs.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

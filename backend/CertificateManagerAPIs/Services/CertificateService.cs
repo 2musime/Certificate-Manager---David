@@ -98,7 +98,7 @@ namespace CertificateManagerAPIs.Services
                 {
                     certificate.AssignedUsers.Add(new AssignedUser
                     {
-                        UserId = userId
+                        UserId = int.Parse(userId)
                     });
                 }
             }
@@ -148,8 +148,7 @@ namespace CertificateManagerAPIs.Services
                     var newAssignedUser = new AssignedUser
                     {
                         UserId = userId,
-                        CertificateId = certificate.Id,
-                        AssignedAt = DateTime.UtcNow
+                        CertificateId = certificate.Id
                     };
                     certificate.AssignedUsers.Add(newAssignedUser);
                 }

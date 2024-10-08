@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CertificateManagerAPIs.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class SupplierController : ControllerBase
     {
         private readonly ISupplierService _supplierService;

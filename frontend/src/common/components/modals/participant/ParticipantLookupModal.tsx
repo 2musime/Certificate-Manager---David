@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import '../participant/ParticipantLookupModal.css';
 
 interface ParticipantLookupModalProps {
-  onAddParticipant: (participants: { name: string; department: string; email: string }[]) => void;
+  onAddParticipant: (participants: Participant[]) => void;
   onClose: () => void;
 }
 
 interface Participant {
   name: string;
   firstName: string;
-  userId: string;
+  userId: number;
   department: string;
   plant: string;
   email: string;
@@ -24,7 +24,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
 
-  const apiUrl = `https://localhost:7164/api/controller/Participants`;
+  const apiUrl = `https://localhost:7164/api/User`;
 
   useEffect(() => {
     const fetchParticipants = async () => {
@@ -36,16 +36,15 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
     fetchParticipants();
   }, []);
 
-  const fetchParticipantByName = async (name: string) => {
-    const params = new URLSearchParams({ participantName: name });
-    const res = await fetch(`https://localhost:7164/api/controller/Participants?${params}`);
+  const fetchParticipant = async () => {
+    const params = new URLSearchParams({ Name: nameSearchTerm,FirstName:firstNameSearchTerm,UserId:userIdSearchTerm,Department:departmentSearchTerm,Plant:plantSearchTerm });
+    const res = await fetch(`https://localhost:7164/api/User?${params}`);
     const data = await res.json();
     setParticipants(data);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNameSearchTerm(e.target.value);
-    fetchParticipantByName(e.target.value);
   };
  
   const handleReset = () => {
@@ -144,7 +143,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
             </div>
           </div>
           <div className="button-row">
-            <button className="search-btn">Search</button>
+            <button onClick={fetchParticipant} className="search-btn">Search</button>
             <button className="reset-btn" onClick={handleReset}>Reset</button>
           </div>
         </div>
