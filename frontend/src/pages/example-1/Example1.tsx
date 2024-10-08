@@ -21,7 +21,7 @@ const Example1: React.FC = () => {
   useEffect(() => {
     async function fetchCertificates() {
       try {
-        const response = await fetch('https://localhost:7164/api/Certificate');
+        const response = await fetch('https://localhost:7164/api/Certificates');
         const data = await response.json();
         setCertificates(data);
       } catch (error) {
@@ -38,7 +38,7 @@ const Example1: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this certificate?')) {
       try {
-        await fetch(`https://localhost:7164/api/Certificate/${id}`, { method: 'DELETE' });
+        await fetch(`https://localhost:7164/api/Certificates/${id}`, { method: 'DELETE' });
         setCertificates((prevCertificates) =>
           prevCertificates.filter((certificate) => certificate.id !== id)
         );

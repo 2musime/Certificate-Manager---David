@@ -6,10 +6,10 @@ namespace CertificateManagerAPIs.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : Controller
+    public class UsersController : Controller
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }

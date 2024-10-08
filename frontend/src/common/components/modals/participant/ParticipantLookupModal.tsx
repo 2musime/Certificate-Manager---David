@@ -6,7 +6,7 @@ interface ParticipantLookupModalProps {
   onClose: () => void;
 }
 
-interface Participant {
+export interface Participant {
   name: string;
   firstName: string;
   userId: number;
@@ -24,7 +24,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
 
-  const apiUrl = `https://localhost:7164/api/User`;
+  const apiUrl = `https://localhost:7164/api/Users`;
 
   useEffect(() => {
     const fetchParticipants = async () => {
@@ -38,7 +38,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
 
   const fetchParticipant = async () => {
     const params = new URLSearchParams({ Name: nameSearchTerm,FirstName:firstNameSearchTerm,UserId:userIdSearchTerm,Department:departmentSearchTerm,Plant:plantSearchTerm });
-    const res = await fetch(`https://localhost:7164/api/User?${params}`);
+    const res = await fetch(`https://localhost:7164/api/Users?${params}`);
     const data = await res.json();
     setParticipants(data);
   };

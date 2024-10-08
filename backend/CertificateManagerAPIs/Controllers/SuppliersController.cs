@@ -6,11 +6,11 @@ namespace CertificateManagerAPIs.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SupplierController : ControllerBase
+    public class SuppliersController : ControllerBase
     {
         private readonly ISupplierService _supplierService;
 
-        public SupplierController(ISupplierService supplierService)
+        public SuppliersController(ISupplierService supplierService)
         {
             _supplierService = supplierService;
         }

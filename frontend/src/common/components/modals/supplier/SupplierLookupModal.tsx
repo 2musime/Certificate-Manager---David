@@ -22,7 +22,7 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
 
   const fetchSuppliersByName = async () => {
     const params = new URLSearchParams({ supplierName: searchTerm,supplierIndex: indexSearchTerm,city:citySearchTerm });
-    const res = await fetch(`https://localhost:7164/api/Supplier?${params}`);
+    const res = await fetch(`https://localhost:7164/api/Suppliers?${params}`);
     const data = await res.json();
     setsuppliers(data);
   };

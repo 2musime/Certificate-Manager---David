@@ -58,8 +58,6 @@ namespace CertificateManagerAPIs.Services
 
                 UserAssignedNavigation = certificate.AssignedUsers?.Select(au => new AssignedUserDto
                 {
-                    CertificateId = au.CertificateId,
-                    UserId = au.UserId,
                     User = au.User != null ? new UserDto
                     {
                         Name = au.User.Name,

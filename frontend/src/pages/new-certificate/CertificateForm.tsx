@@ -13,7 +13,7 @@ interface ICertificateForm {
   isEdit?: boolean;
   certificateId?: number;
 }
-interface Comment {
+ export interface Comment {
   text: string;
   user: string;
 }
@@ -29,6 +29,7 @@ interface CertificateCreateDto {
     userComment: string;
   }>;
   assignedUserIds: number[];
+  userAssignedNavigation?: any[];
   pdfPreview?: string | undefined;
 }
 const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: ICertificateForm) => {
@@ -57,7 +58,7 @@ const CertificateForm: React.FC<ICertificateForm> = ({ isEdit, certificateId }: 
 const { id } = useParams<{ id: string }>(); 
 const getCertificate = async (): Promise<CertificateCreateDto> => {
   try {
-    const response = await fetch(`https://localhost:7164/api/Certificate/${id}`);
+    const response = await fetch(`https://localhost:7164/api/Certificates/${id}`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch certificate: ${response.statusText}`);
@@ -87,8 +88,11 @@ const getCertificate = async (): Promise<CertificateCreateDto> => {
             supplier: certificate.supplier,
             pdfFile: certificate.pdfFile,
             pdfPreview: certificate.pdfPreview || undefined
-            
+
           });
+          const assignedUsers=certificate?.userAssignedNavigation?.map((user)=>user?.user)
+          setParticipants(assignedUsers||[])
+          setComments(certificate?.comments)
         } catch (error) {
           console.error('Error fetching certificate:', error);
           setError('Could not fetch certificate details.');
@@ -139,7 +143,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
     });
   }
   try {
-    const response = await fetch(`https://localhost:7164/api/Certificate/${certificateId}`, {
+    const response = await fetch(`https://localhost:7164/api/Certificates/${certificateId}`, {
       method: 'PUT',
       body: formData,
     });
@@ -176,7 +180,7 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
       });
     }
     try {
-      const response = await fetch('https://localhost:7164/api/Certificate', {
+      const response = await fetch('https://localhost:7164/api/Certificates', {
         method: 'POST',
         body: formData
       });
@@ -339,12 +343,12 @@ const updateCertificate = async (certificateData: CertificateCreateDto, certific
           <div className="comment-container">
               <button type="button" onClick={()=>setOpenComment(true)}>{translations['newComment']}</button>
           </div>
-          {openComment&&<CommentModal onAddComment={(e)=>{
+          {openComment&&<CommentModal certificateId={certificateId} onAddComment={(e)=>{
             setComments((prev)=>[...prev,e])
                     }} onClose={()=>setOpenComment(false)} />}
           <div className="participant-group">
             {comments?.map((c)=>(
-              <><p><b>User:</b>{c?.user}</p><p><b>Comment:</b>{c?.text}</p></>
+              <><p><b>User:</b>{c?.userId}</p><p><b>Comment:</b>{c?.userComment}</p></>
             ))}
             <div className="participant-container">
               <label>Assigned users</label>

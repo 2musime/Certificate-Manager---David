@@ -6,10 +6,10 @@ namespace CertificateManagerAPIs.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CertificateController : ControllerBase
+    public class CertificatesController : ControllerBase
     {
         private readonly ICertificateService _certificateService;
-        public CertificateController(ICertificateService certificateService)
+        public CertificatesController(ICertificateService certificateService)
         {
             _certificateService = certificateService;
         }
