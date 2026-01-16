@@ -13,9 +13,7 @@ public partial class Certificate
 
     public DateTime ValidTo { get; set; }
 
-    public string PdfFile { get; set; } = null!;
-
-    public int? UserAssigned { get; set; }
+    public byte[] PdfFile { get; set; } = null!;
 
     public DateTime? CreatedAt { get; set; }
 
@@ -30,6 +28,4 @@ public partial class Certificate
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual Supplier Supplier { get; set; } = null!;
-
-    public virtual User? UserAssignedNavigation { get; set; }
 }

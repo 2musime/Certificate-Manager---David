@@ -6,10 +6,10 @@ namespace CertificateManagerAPIs.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CertificateController : ControllerBase
+    public class CertificatesController : ControllerBase
     {
         private readonly ICertificateService _certificateService;
-        public CertificateController(ICertificateService certificateService)
+        public CertificatesController(ICertificateService certificateService)
         {
             _certificateService = certificateService;
         }
@@ -33,15 +33,15 @@ namespace CertificateManagerAPIs.Controllers
 
         // POST: api/Certificate
         [HttpPost]
-        public async Task<ActionResult> CreateCertificate([FromBody] CertificateCreateDto dto)
+        public async Task<ActionResult> CreateCertificate([FromForm] CertificateCreateDto dto)
         {
             await _certificateService.CreateCertificateAsync(dto);
-            return CreatedAtAction(nameof(GetCertificate), new { id = dto.Supplier }, dto);
+            return CreatedAtAction(nameof(GetCertificate), new { id = dto.SupplierId }, dto);
         }
 
         // PUT: api/Certificate/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCertificate(int id, [FromBody] CertificateUpdateDto dto)
+        public async Task<ActionResult> UpdateCertificate(int id, [FromForm] CertificateUpdateDto dto)
         {
             await _certificateService.UpdateCertificateAsync(id, dto);
             return NoContent();

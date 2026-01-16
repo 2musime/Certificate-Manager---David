@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../participant/ParticipantLookupModal.css';
 
 interface ParticipantLookupModalProps {
-  onAddParticipant: (participants: { name: string; department: string; email: string }[]) => void;
+  onAddParticipant: (participants: Participant[]) => void;
   onClose: () => void;
 }
 
-interface IParticipant {
+export interface Participant {
   name: string;
   firstName: string;
-  userId: string;
+  userId: number;
   department: string;
   plant: string;
   email: string;
@@ -19,59 +19,44 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
   const [nameSearchTerm, setNameSearchTerm] = useState('');
   const [firstNameSearchTerm, setFirstNameSearchTerm] = useState('');
   const [userIdSearchTerm, setUserIdSearchTerm] = useState('');
-  const [departmentSearchTerm, setDepartmentSearchTerm] = useState('ITM');
+  const [departmentSearchTerm, setDepartmentSearchTerm] = useState('');
   const [plantSearchTerm, setPlantSearchTerm] = useState('');
-  const [selectedParticipants, setSelectedParticipants] = useState<IParticipant[]>([]);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [selectedParticipants, setSelectedParticipants] = useState<Participant[]>([]);
 
-  const participants: IParticipant[] = [
-    { name: 'Simon', firstName: 'John', userId: '123', department: 'ITM', plant: 'Plant1', email: 'john.doe@example.com' },
-    { name: 'Wolfgang', firstName: 'Jane', userId: '456', department: 'ITM', plant: 'Plant2', email: 'jane.smith@example.com' },
-     { name: 'Taylor', firstName: 'Emily', userId: '112', department: 'ITM', plant: 'Plant5', email: 'emily.taylor@example.com' },
-  ];
+  const apiUrl = `https://localhost:7164/api/Users`;
 
-  const filteredParticipants = participants.filter(participant => {
-    return (
-      participant.name.toLowerCase().includes(nameSearchTerm.toLowerCase()) &&
-      participant.firstName.toLowerCase().includes(firstNameSearchTerm.toLowerCase()) &&
-      participant.userId.toLowerCase().includes(userIdSearchTerm.toLowerCase()) &&
-      participant.department.toLowerCase().includes(departmentSearchTerm.toLowerCase()) &&
-      participant.plant.toLowerCase().includes(plantSearchTerm.toLowerCase())
-    );
-  });
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      setParticipants(data);
+    };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    switch (name) {
-      case 'name':
-        setNameSearchTerm(value);
-        break;
-      case 'firstName':
-        setFirstNameSearchTerm(value);
-        break;
-      case 'userId':
-        setUserIdSearchTerm(value);
-        break;
-      case 'department':
-        setDepartmentSearchTerm(value);
-        break;
-      case 'plant':
-        setPlantSearchTerm(value);
-        break;
-      default:
-        break;
-    }
+    fetchParticipants();
+  }, []);
+
+  const fetchParticipant = async () => {
+    const params = new URLSearchParams({ Name: nameSearchTerm,FirstName:firstNameSearchTerm,UserId:userIdSearchTerm,Department:departmentSearchTerm,Plant:plantSearchTerm });
+    const res = await fetch(`https://localhost:7164/api/Users?${params}`);
+    const data = await res.json();
+    setParticipants(data);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNameSearchTerm(e.target.value);
+  };
+ 
   const handleReset = () => {
     setNameSearchTerm('');
     setFirstNameSearchTerm('');
     setUserIdSearchTerm('');
-    setDepartmentSearchTerm('ITM');
+    setDepartmentSearchTerm('');
     setPlantSearchTerm('');
   };
 
-  const handleParticipantSelection = (participant: IParticipant) => {
-    const isSelected = selectedParticipants.find(p => p.userId === participant.userId);
+  const handleParticipantSelection = (participant: Participant) => {
+    const isSelected = selectedParticipants.find((p: Participant) => p.userId === participant.userId);
     if (isSelected) {
       setSelectedParticipants(prevSelected =>
         prevSelected.filter(p => p.userId !== participant.userId)
@@ -136,7 +121,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
               <label htmlFor="department">Department</label>
               <input
                 type="text"
-                id="department" readOnly
+                id="department"
                 name="department"
                 value={departmentSearchTerm}
                 onChange={handleSearchChange}
@@ -158,7 +143,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
             </div>
           </div>
           <div className="button-row">
-            <button className="search-btn">Search</button>
+            <button onClick={fetchParticipant} className="search-btn">Search</button>
             <button className="reset-btn" onClick={handleReset}>Reset</button>
           </div>
         </div>
@@ -177,7 +162,7 @@ const ParticipantLookupModal: React.FC<ParticipantLookupModalProps> = ({ onAddPa
               </tr>
             </thead>
             <tbody>
-              {filteredParticipants.map((participant, index) => (
+              {participants?.map((participant, index) => (
                 <tr key={index}>
                   <td>
                     <input

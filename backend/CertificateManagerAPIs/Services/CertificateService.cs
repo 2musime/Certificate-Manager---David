@@ -55,10 +55,9 @@ namespace CertificateManagerAPIs.Services
                     UserId = c.UserId,
                     UserComment = c.UserComment
                 }).ToList(),
+
                 UserAssignedNavigation = certificate.AssignedUsers?.Select(au => new AssignedUserDto
                 {
-                    CertificateId = au.CertificateId,
-                    UserId = au.UserId,
                     User = au.User != null ? new UserDto
                     {
                         Name = au.User.Name,
@@ -71,38 +70,37 @@ namespace CertificateManagerAPIs.Services
 
         public async Task CreateCertificateAsync(CertificateCreateDto dto)
         {
+            byte[]? pdfBytes = null;
+            if (dto.PdfFile != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await dto.PdfFile.CopyToAsync(memoryStream);
+                    pdfBytes = memoryStream.ToArray();
+                }
+            }
+
             var certificate = new Certificate
             {
                 Type = dto.Type,
                 ValidFrom = dto.ValidFrom,
                 ValidTo = dto.ValidTo,
-                PdfFile = dto.PdfFile,
-                SupplierId = dto.Supplier.SupplierId,
-                AssignedUsers = new List<AssignedUser>(),
-                Comments = new List<Comment>()
+                PdfFile = pdfBytes,
+                SupplierId = dto.SupplierId,
+                AssignedUsers = new List<AssignedUser>()
             };
-            if (dto.AssignedUserIds != null)
+
+            if (dto.AssignedUserIds != null && dto.AssignedUserIds.Any())
             {
                 foreach (var userId in dto.AssignedUserIds)
                 {
                     certificate.AssignedUsers.Add(new AssignedUser
                     {
-                        UserId = userId,
-                        Certificate = certificate
+                        UserId = int.Parse(userId)
                     });
                 }
             }
-            if (dto.Comments != null)
-            {
-                foreach (var commentDto in dto.Comments)
-                {
-                    certificate.Comments.Add(new Comment
-                    {
-                        UserId = commentDto.UserId,
-                        UserComment = commentDto.UserComment
-                    });
-                }
-            }
+
             await _certificateRepository.AddCertificateAsync(certificate);
             await _certificateRepository.SaveChangesAsync();
         }
@@ -110,42 +108,53 @@ namespace CertificateManagerAPIs.Services
         public async Task UpdateCertificateAsync(int id, CertificateUpdateDto dto)
         {
             var certificate = await _certificateRepository.GetCertificateByIdAsync(id);
-            if (certificate == null) throw new Exception("Certificate not found");
+            if (certificate == null)
+                throw new Exception("Certificate not found");
+
             certificate.Type = dto.Type;
             certificate.ValidFrom = dto.ValidFrom;
             certificate.ValidTo = dto.ValidTo;
-            certificate.PdfFile = dto.PdfFile;
-            certificate.UserAssigned = dto.UserAssigned;
             certificate.SupplierId = dto.SupplierId;
 
-            if (dto.NewComments != null && dto.NewComments.Any())
+            if (dto.PdfFile != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await dto.PdfFile.CopyToAsync(memoryStream);
+                    certificate.PdfFile = memoryStream.ToArray();
+                }
+            }
+            if (dto.NewComments != null)
             {
                 foreach (var commentDto in dto.NewComments)
                 {
                     var newComment = new Comment
                     {
+                        CertificateId = certificate.Id,
                         UserId = commentDto.UserId,
                         UserComment = commentDto.UserComment
                     };
                     certificate.Comments.Add(newComment);
                 }
             }
-            if (dto.AssignedUserIds != null && dto.AssignedUserIds.Any())
+
+            if (dto.AssignedUserIds != null)
             {
+                certificate.AssignedUsers.Clear();
                 foreach (var userId in dto.AssignedUserIds)
                 {
                     var newAssignedUser = new AssignedUser
                     {
                         UserId = userId,
-                        Certificate = certificate
+                        CertificateId = certificate.Id
                     };
                     certificate.AssignedUsers.Add(newAssignedUser);
                 }
             }
+
             await _certificateRepository.UpdateCertificateAsync(certificate);
             await _certificateRepository.SaveChangesAsync();
         }
-
         public async Task DeleteCertificateAsync(int id)
         {
             await _certificateRepository.DeleteCertificateAsync(id);

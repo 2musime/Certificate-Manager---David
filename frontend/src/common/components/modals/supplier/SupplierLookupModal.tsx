@@ -4,7 +4,13 @@ import useTranslation from '../../../context/useTranslation';
 
 interface SupplierLookupModalProps {
   onClose: () => void;
-  onSelectSupplier: (name: string) => void;
+  onSelectSupplier: (supplier: Supplier) => void;
+}
+export interface Supplier {
+  supplierId: number;
+  supplierName: string;
+  supplierIndex: string;
+  city: string;
 }
 
 const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSupplier }) => {
@@ -12,12 +18,14 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
   const [indexSearchTerm, setIndexSearchTerm] = useState('');
   const [citySearchTerm, setCitySearchTerm] = useState('');
   const translate = useTranslation();
+  const [suppliers, setsuppliers] = useState<Supplier[]>([]);
 
-  const suppliers = [
-    { name: 'ANDEMIS GmbH', index: '1', city: 'Stuttgart' },
-    { name: 'Strutgut', index: '2', city: 'Berlin' },
-    { name: 'Munich', index: '3', city: 'Munich' },
-  ];
+  const fetchSuppliersByName = async () => {
+    const params = new URLSearchParams({ supplierName: searchTerm,supplierIndex: indexSearchTerm,city:citySearchTerm });
+    const res = await fetch(`https://localhost:7164/api/Suppliers?${params}`);
+    const data = await res.json();
+    setsuppliers(data);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -30,14 +38,6 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
   const handleCitySearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCitySearchTerm(e.target.value);
   };
-
-  const filteredSuppliers = suppliers.filter(supplier => {
-    return (
-      supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      supplier.index.toLowerCase().includes(indexSearchTerm.toLowerCase()) &&
-      supplier.city.toLowerCase().includes(citySearchTerm.toLowerCase())
-    );
-  });
 
   return (
     <div className="smodal-overlay">
@@ -84,8 +84,8 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
             </div>
           </div>
           <div className="button-row">
-            <button className="search-btn">{translate('search')}</button>
-            <button className="reset-btn" onClick={() => { setSearchTerm(''); setIndexSearchTerm(''); setCitySearchTerm(''); }}>{translate('reset')}</button>
+            <button onClick={fetchSuppliersByName} className="search-btn">{translate('search')}</button>
+            <button className="reset-btn" onClick={() => { setSearchTerm(''); setIndexSearchTerm(''); setCitySearchTerm('');setsuppliers([]) }}> {translate('reset')}</button>
           </div>
         </div>
         <div className="supplier-list">
@@ -100,11 +100,11 @@ const SupplierLookupModal: FC<SupplierLookupModalProps> = ({ onClose, onSelectSu
               </tr>
             </thead>
             <tbody>
-              {filteredSuppliers.map((supplier, index) => (
-                <tr key={index} onClick={() => onSelectSupplier(supplier.name)}>
+              {Array.isArray(suppliers) && suppliers.map((supplier, index) => (
+                <tr key={index} onClick={() => onSelectSupplier(supplier)}>
                   <td><input type="radio" name="supplier" /></td>
-                  <td>{supplier.name}</td>
-                  <td>{supplier.index}</td>
+                  <td>{supplier.supplierName}</td>
+                  <td>{supplier.supplierIndex}</td>
                   <td>{supplier.city}</td>
                 </tr>
               ))}
